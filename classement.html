@@ -489,12 +489,10 @@
         <p class="readonly-note">Cette page est publique et lecture seule. Les joueurs ne peuvent rien modifier.</p>
       </div>
       <div>
-        <label>URL Web App Google Apps Script</label>
-        <input id="apiUrl" type="url" placeholder="https://script.google.com/macros/s/XXXXX/exec" />
-        <div class="actions">
-          <button onclick="saveConnection()">Connecter</button>
-        </div>
-      </div>
+  <p class="readonly-note">
+    Mise à jour automatique du classement.
+  </p>
+</div>
     </section>
 
     <div id="championBox" class="champion-box">
@@ -540,6 +538,7 @@
 
     const LOCAL_KEY = "silent_legion_google_connection";
 const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsejcYYzxeoX_cSYeEmF-53TbvrrIBnRGro-YJqF9AtbVU5qrjyX3xgbw/exec";
+const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsejcYYzxeoX_cSYeEmF-53TbvrrIBnRGro-YJqF9AtbVU5qrjyX3xgbw/exec";
     const IS_ADMIN = document.body.dataset.mode === "admin";
 
     let state = {
@@ -563,13 +562,16 @@ const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsej
     }
 
     function getConnection() {
-      try { const saved = JSON.parse(localStorage.getItem(LOCAL_KEY) || "{}");
-return {
-  ...saved,
-  apiUrl: saved.apiUrl || PUBLIC_API_URL
-}; }
-      catch { return {}; }
-    }
+  if (!IS_ADMIN) {
+    return { apiUrl: PUBLIC_API_URL };
+  }
+
+  try {
+    return JSON.parse(localStorage.getItem(LOCAL_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
 
     function saveConnection() {
       const data = getConnection();
