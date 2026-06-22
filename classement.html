@@ -539,6 +539,7 @@
   <script>
 
     const LOCAL_KEY = "silent_legion_google_connection";
+const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsejcYYzxeoX_cSYeEmF-53TbvrrIBnRGro-YJqF9AtbVU5qrjyX3xgbw/exec";
     const IS_ADMIN = document.body.dataset.mode === "admin";
 
     let state = {
@@ -562,7 +563,11 @@
     }
 
     function getConnection() {
-      try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || "{}"); }
+      try { const saved = JSON.parse(localStorage.getItem(LOCAL_KEY) || "{}");
+return {
+  ...saved,
+  apiUrl: saved.apiUrl || PUBLIC_API_URL
+}; }
       catch { return {}; }
     }
 
