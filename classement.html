@@ -4,18 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SILENT LEGION - Classement live</title>
-  <style>
 
+  <style>
     :root {
       --bg: #06090f;
       --panel: #111722;
-      --panel-2: #18202e;
-      --metal: #8d99a6;
       --text: #e8edf2;
       --muted: #9ca8b6;
       --blue: #00aaff;
       --blue-2: #36c3ff;
-      --danger: #ff4d4d;
       --success: #33ff99;
       --warning: #ffd166;
       --border: rgba(0, 170, 255, 0.25);
@@ -29,11 +26,11 @@
     }
 
     body {
+      min-height: 100vh;
+      color: var(--text);
       background:
         radial-gradient(circle at top left, rgba(0, 170, 255, 0.18), transparent 35%),
         linear-gradient(135deg, #05070c, #101722 45%, #05070c);
-      color: var(--text);
-      min-height: 100vh;
     }
 
     body::before {
@@ -98,6 +95,22 @@
       letter-spacing: 1px;
     }
 
+    .live-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: var(--success);
+      border-radius: 999px;
+      box-shadow: 0 0 16px var(--success);
+      margin-right: 8px;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: .45; transform: scale(.85); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+
     main {
       width: min(1400px, 94%);
       margin: 30px auto 70px;
@@ -105,121 +118,30 @@
       gap: 22px;
     }
 
-    .dashboard {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 22px;
-    }
-
-    .panel {
+    .public-banner,
+    .panel,
+    .stat,
+    .champion-box {
       background: linear-gradient(145deg, rgba(17, 23, 34, 0.96), rgba(8, 12, 18, 0.96));
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 24px;
       box-shadow: 0 0 35px rgba(0, 170, 255, 0.08);
     }
 
-    .panel h2 {
-      font-size: 22px;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-      border-left: 4px solid var(--blue);
-      padding-left: 12px;
+    .public-banner {
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      background: linear-gradient(145deg, rgba(0, 170, 255, 0.16), rgba(51, 255, 153, 0.06));
     }
 
-    .panel p.help {
+    .readonly-note {
       color: var(--muted);
       font-size: 14px;
-      margin-bottom: 18px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-
-    label {
-      display: block;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: bold;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      background: #070b12;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--text);
-      padding: 13px 14px;
-      border-radius: 10px;
-      outline: none;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.13);
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    button {
-      border: none;
-      background: var(--blue);
-      color: #02050a;
-      padding: 13px 16px;
-      border-radius: 10px;
-      font-weight: 900;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: var(--blue-2);
-      transform: translateY(-2px);
-    }
-
-    button.secondary {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.18);
-      color: var(--text);
-    }
-
-    button.danger {
-      background: rgba(255, 77, 77, 0.15);
-      border: 1px solid rgba(255, 77, 77, 0.45);
-      color: #ffb3b3;
-    }
-
-    button.small {
-      padding: 8px 10px;
-      font-size: 11px;
-      border-radius: 8px;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
+      margin-top: 8px;
     }
 
     .stats-row {
@@ -229,9 +151,6 @@
     }
 
     .stat {
-      background: linear-gradient(145deg, #121927, #070b12);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
       padding: 18px;
     }
 
@@ -249,6 +168,30 @@
       margin-top: 6px;
     }
 
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .panel {
+      padding: 24px;
+    }
+
+    .panel h2 {
+      font-size: 22px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      border-left: 4px solid var(--blue);
+      padding-left: 12px;
+    }
+
+    #syncStatus {
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -256,8 +199,7 @@
       border-radius: 14px;
     }
 
-    th,
-    td {
+    th, td {
       padding: 14px;
       text-align: left;
       border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -288,8 +230,6 @@
 
     .status {
       display: inline-flex;
-      align-items: center;
-      gap: 7px;
       border-radius: 999px;
       padding: 7px 10px;
       font-size: 11px;
@@ -325,10 +265,6 @@
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.08);
       background: rgba(8, 12, 18, 0.7);
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: center;
     }
 
     .history-item strong {
@@ -343,12 +279,9 @@
 
     .champion-box {
       display: none;
-      border: 1px solid rgba(51, 255, 153, 0.5);
+      border-color: rgba(51, 255, 153, 0.5);
       background: linear-gradient(145deg, rgba(51, 255, 153, 0.18), rgba(0, 170, 255, 0.08));
-      border-radius: 18px;
       padding: 22px;
-      margin-bottom: 22px;
-      box-shadow: 0 0 35px rgba(51, 255, 153, 0.12);
     }
 
     .champion-box.show {
@@ -381,19 +314,12 @@
         grid-template-columns: 1fr;
       }
 
-      .stats-row,
-      .grid-3 {
+      .stats-row {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
     @media (max-width: 680px) {
-      main {
-        width: 94%;
-      }
-
-      .grid-2,
-      .grid-3,
       .stats-row {
         grid-template-columns: 1fr;
       }
@@ -402,76 +328,14 @@
         font-size: 13px;
       }
 
-      th,
-      td {
+      th, td {
         padding: 10px;
       }
-
-      .history-item {
-        grid-template-columns: 1fr;
-      }
     }
-  
-
-    .sync-box {
-      display: grid;
-      gap: 12px;
-      background: rgba(0, 170, 255, 0.06);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 22px;
-    }
-
-    .sync-status {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .public-banner {
-      background: linear-gradient(145deg, rgba(0, 170, 255, 0.16), rgba(51, 255, 153, 0.06));
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 18px;
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .live-dot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      background: var(--success);
-      border-radius: 999px;
-      box-shadow: 0 0 16px var(--success);
-      margin-right: 8px;
-      animation: pulse 1.2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: .45; transform: scale(.85); }
-      50% { opacity: 1; transform: scale(1.15); }
-    }
-
-    .viewer-only td:last-child,
-    .viewer-only th:last-child {
-      display: none;
-    }
-
-    .readonly-note {
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 8px;
-    }
-
   </style>
 </head>
-<body data-mode="viewer">
 
+<body>
   <header>
     <div class="header-row">
       <div class="brand">
@@ -485,14 +349,10 @@
   <main>
     <section class="public-banner">
       <div>
-        <h2 style="margin-bottom:6px;">Classement en temps réel</h2>
-        <p class="readonly-note">Cette page est publique et lecture seule. Les joueurs ne peuvent rien modifier.</p>
+        <h2>Classement en temps réel</h2>
+        <p class="readonly-note">Cette page est publique et lecture seule. Mise à jour automatique toutes les 5 secondes.</p>
       </div>
-      <div>
-  <p class="readonly-note">
-    Mise à jour automatique du classement.
-  </p>
-</div>
+      <div class="badge">Connexion automatique</div>
     </section>
 
     <div id="championBox" class="champion-box">
@@ -510,11 +370,20 @@
 
     <section class="panel">
       <h2>Classement Match Point</h2>
-      <p id="syncStatus" class="help">Connexion en attente.</p>
+      <p id="syncStatus">Statut : connexion en cours...</p>
+
       <div style="overflow-x:auto;">
-        <table class="viewer-only">
+        <table>
           <thead>
-            <tr><th>#</th><th>Équipe</th><th>Capitaine</th><th>Points</th><th>Kills</th><th>Wins</th><th>Statut</th><th>Action</th></tr>
+            <tr>
+              <th>#</th>
+              <th>Équipe</th>
+              <th>Capitaine</th>
+              <th>Points</th>
+              <th>Kills</th>
+              <th>Wins</th>
+              <th>Statut</th>
+            </tr>
           </thead>
           <tbody id="rankingBody"></tbody>
         </table>
@@ -524,7 +393,12 @@
     <section class="dashboard">
       <div class="panel">
         <h2>Barème actuel</h2>
-        <table><thead><tr><th>Action</th><th>Points</th></tr></thead><tbody id="scoringTable"></tbody></table>
+        <table>
+          <thead>
+            <tr><th>Action</th><th>Points</th></tr>
+          </thead>
+          <tbody id="scoringTable"></tbody>
+        </table>
       </div>
 
       <div class="panel">
@@ -535,11 +409,7 @@
   </main>
 
   <script>
-
-    const LOCAL_KEY = "silent_legion_google_connection";
-const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsejcYYzxeoX_cSYeEmF-53TbvrrIBnRGro-YJqF9AtbVU5qrjyX3xgbw/exec";
-const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsejcYYzxeoX_cSYeEmF-53TbvrrIBnRGro-YJqF9AtbVU5qrjyX3xgbw/exec";
-    const IS_ADMIN = document.body.dataset.mode === "admin";
+    const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsejcYYzxeoX_cSYeEmF-53TbvrrIBnRGro-YJqF9AtbVU5qrjyX3xgbw/exec";
 
     let state = {
       lobby: { name: "Silent Legion Custom", code: "", host: "", startTime: "" },
@@ -551,104 +421,34 @@ const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsej
 
     const $ = (id) => document.getElementById(id);
 
-    function uid() {
-      return Date.now().toString(36) + Math.random().toString(36).slice(2);
-    }
-
     function escapeHtml(value) {
       return String(value || "")
-        .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;").replaceAll("'", "&#039;");
-    }
-
-    function getConnection() {
-  if (!IS_ADMIN) {
-    return { apiUrl: PUBLIC_API_URL };
-  }
-
-  try {
-    return JSON.parse(localStorage.getItem(LOCAL_KEY) || "{}");
-  } catch {
-    return {};
-  }
-}
-
-    function saveConnection() {
-      const data = getConnection();
-      data.apiUrl = $("apiUrl")?.value.trim() || data.apiUrl || "";
-      if (IS_ADMIN && $("adminKey")) data.adminKey = $("adminKey").value.trim() || data.adminKey || "";
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
-      setStatus("Connexion sauvegardée.");
-      loadCloud();
-    }
-
-    function renderConnection() {
-      const data = getConnection();
-      if ($("apiUrl")) $("apiUrl").value = data.apiUrl || "";
-      if (IS_ADMIN && $("adminKey")) $("adminKey").value = data.adminKey || "";
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
     function setStatus(text) {
-      const el = $("syncStatus");
-      if (el) el.textContent = "Statut : " + text;
-    }
-
-    async function api(action, payload = {}, method = "POST") {
-      const { apiUrl, adminKey } = getConnection();
-      if (!apiUrl) throw new Error("URL Web App manquante.");
-
-      if (method === "GET") {
-        const url = apiUrl + "?action=" + encodeURIComponent(action) + "&t=" + Date.now();
-        const res = await fetch(url);
-        const data = await res.json();
-        if (!data.ok) throw new Error(data.error || "Erreur API.");
-        return data;
-      }
-
-      const res = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action, adminKey, payload })
-      });
-      const data = await res.json();
-      if (!data.ok) throw new Error(data.error || "Erreur API.");
-      return data;
+      $("syncStatus").textContent = "Statut : " + text;
     }
 
     async function loadCloud() {
       try {
-        const data = await api("get", {}, "GET");
-        if (data.state) {
-          state = normalizeState(data.state);
-          render();
-          setStatus("Données chargées depuis Google Sheets à " + new Date().toLocaleTimeString("fr-FR") + ".");
-        }
-      } catch (e) {
-        setStatus("Erreur : " + e.message);
-      }
-    }
+        const url = PUBLIC_API_URL + "?action=get&t=" + Date.now();
+        const response = await fetch(url);
+        const data = await response.json();
 
-    async function saveCloud() {
-      if (!IS_ADMIN) return;
-      try {
-        await api("save", state);
-        setStatus("Sauvegardé dans Google Sheets à " + new Date().toLocaleTimeString("fr-FR") + ".");
-      } catch (e) {
-        setStatus("Erreur sauvegarde : " + e.message);
-        alert("Erreur sauvegarde Google Sheets : " + e.message);
-      }
-    }
-
-    async function testConnection() {
-      try {
-        const data = await api("get", {}, "GET");
-        setStatus("Connexion OK. Version cloud chargée.");
-        if (data.state) {
-          state = normalizeState(data.state);
-          render();
+        if (!data.ok) {
+          throw new Error(data.error || "Erreur Apps Script.");
         }
-      } catch (e) {
-        setStatus("Erreur : " + e.message);
+
+        state = normalizeState(data.state || {});
+        render();
+        setStatus("Données chargées depuis Google Sheets à " + new Date().toLocaleTimeString("fr-FR") + ".");
+      } catch (error) {
+        setStatus("Erreur : " + error.message);
       }
     }
 
@@ -674,19 +474,23 @@ const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsej
 
     function rebuildStats() {
       state.teams.forEach(team => {
-        team.points = 0; team.kills = 0; team.wins = 0; team.games = 0;
+        team.points = 0;
+        team.kills = 0;
+        team.wins = 0;
+        team.games = 0;
       });
 
       state.championId = null;
-      const sortedResults = [...state.results].sort((a, b) => a.order - b.order);
+
+      const sortedResults = [...state.results].sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
 
       sortedResults.forEach(result => {
         const team = state.teams.find(t => t.id === result.teamId);
         if (!team) return;
 
-        const kills = Number(result.kills);
-        const place = Number(result.placement);
-        const killPoints = kills * Number(state.settings.killPoint);
+        const kills = Number(result.kills) || 0;
+        const place = Number(result.placement) || 99;
+        const killPoints = kills * Number(state.settings.killPoint || 1);
         const placementPoints = getPlacementPoints(place);
         const total = killPoints + placementPoints;
         const wasEligible = team.points >= Number(state.settings.threshold);
@@ -700,6 +504,7 @@ const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsej
         team.kills += kills;
         team.points += total;
         team.games += 1;
+
         if (place === 1) team.wins += 1;
 
         result.afterPoints = team.points;
@@ -713,42 +518,9 @@ const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsej
       });
     }
 
-    async function saveSettings() {
-      state.lobby.name = $("lobbyName").value.trim() || "Silent Legion Custom";
-      state.lobby.code = $("lobbyCode").value.trim();
-      state.lobby.host = $("hostName").value.trim();
-      state.lobby.startTime = $("startTime").value.trim();
-
-      state.settings.threshold = Number($("threshold").value) || 50;
-      state.settings.killPoint = Number($("killPoint").value) || 1;
-      state.settings.p1 = Number($("p1").value) || 0;
-      state.settings.p2 = Number($("p2").value) || 0;
-      state.settings.p3 = Number($("p3").value) || 0;
-      state.settings.p5 = Number($("p5").value) || 0;
-      state.settings.p10 = Number($("p10").value) || 0;
-
-      rebuildStats();
-      render();
-      await saveCloud();
-    }
-
-    function renderSettings() {
-      if (!IS_ADMIN) return;
-      $("lobbyName").value = state.lobby.name;
-      $("lobbyCode").value = state.lobby.code;
-      $("hostName").value = state.lobby.host;
-      $("startTime").value = state.lobby.startTime;
-      $("threshold").value = state.settings.threshold;
-      $("killPoint").value = state.settings.killPoint;
-      $("p1").value = state.settings.p1;
-      $("p2").value = state.settings.p2;
-      $("p3").value = state.settings.p3;
-      $("p5").value = state.settings.p5;
-      $("p10").value = state.settings.p10;
-    }
-
     function renderStats() {
       const mpCount = state.teams.filter(t => t.points >= Number(state.settings.threshold)).length;
+
       $("statTeams").textContent = state.teams.length;
       $("statRounds").textContent = state.results.length;
       $("statThreshold").textContent = state.settings.threshold;
@@ -786,65 +558,64 @@ const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsej
       const teams = getSortedTeams();
 
       if (teams.length === 0) {
-        body.innerHTML = `<tr><td colspan="8"><div class="empty">Aucune équipe ajoutée pour le moment.</div></td></tr>`;
+        body.innerHTML = `<tr><td colspan="7"><div class="empty">Aucune équipe ajoutée pour le moment.</div></td></tr>`;
         return;
       }
 
       body.innerHTML = teams.map((team, index) => {
-        const rowClass = state.championId === team.id ? "champion" : team.points >= Number(state.settings.threshold) ? "matchpoint" : "";
-        const action = IS_ADMIN ? `<button class="small danger" onclick="deleteTeam('${team.id}')">Supprimer</button>` : "";
+        const rowClass =
+          state.championId === team.id
+            ? "champion"
+            : team.points >= Number(state.settings.threshold)
+              ? "matchpoint"
+              : "";
+
         return `
           <tr class="${rowClass}">
             <td>${index + 1}</td>
-            <td><strong>${escapeHtml(team.name)}</strong><br><small style="color:var(--muted);">${escapeHtml((team.players || []).join(", "))}</small></td>
+            <td>
+              <strong>${escapeHtml(team.name)}</strong>
+              <br>
+              <small style="color:var(--muted);">${escapeHtml((team.players || []).join(", "))}</small>
+            </td>
             <td>${escapeHtml(team.captain || "-")}</td>
             <td><strong>${team.points}</strong></td>
             <td>${team.kills}</td>
             <td>${team.wins}</td>
             <td>${getTeamStatus(team)}</td>
-            <td>${action}</td>
           </tr>
         `;
       }).join("");
     }
 
-    function renderTeamSelect() {
-      if (!IS_ADMIN) return;
-      const select = $("teamSelect");
-      if (state.teams.length === 0) {
-        select.innerHTML = `<option value="">Ajoute d'abord une équipe</option>`;
-        return;
-      }
-      select.innerHTML = [...state.teams]
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map(team => `<option value="${team.id}">${escapeHtml(team.name)}</option>`)
-        .join("");
-    }
-
     function renderHistory() {
       const history = $("history");
+
       if (state.results.length === 0) {
         history.innerHTML = `<div class="empty">Aucun résultat saisi pour le moment.</div>`;
         return;
       }
 
-      const limit = IS_ADMIN ? state.results.length : Math.min(state.results.length, 8);
-      const items = [...state.results].sort((a, b) => b.order - a.order).slice(0, limit);
+      const items = [...state.results]
+        .sort((a, b) => Number(b.order || 0) - Number(a.order || 0))
+        .slice(0, 8);
 
       history.innerHTML = items.map(result => {
         const team = state.teams.find(t => t.id === result.teamId);
         const teamName = team ? team.name : result.teamName || "Équipe supprimée";
         const mpText = result.wasEligible ? "était déjà Match Point" : "n'était pas encore Match Point";
         const championText = result.championResult ? " — CHAMPION DÉTECTÉ" : "";
-        const del = IS_ADMIN ? `<button class="small danger" onclick="deleteResult('${result.id}')">Supprimer</button>` : "";
+
         return `
           <div class="history-item">
-            <div>
-              <strong>Manche ${result.round} — ${escapeHtml(teamName)}${championText}</strong>
-              <p>Placement : Top ${result.placement} • Kills : ${result.kills} • Points : ${result.total} (${result.killPoints} kills + ${result.placementPoints} placement)</p>
-              <p>Avant : ${result.beforePoints} pts • Après : ${result.afterPoints} pts • ${mpText}</p>
-            </div>
-            ${del}
+            <strong>Manche ${result.round} — ${escapeHtml(teamName)}${championText}</strong>
+            <p>
+              Placement : Top ${result.placement} • Kills : ${result.kills} •
+              Points : ${result.total} (${result.killPoints} kills + ${result.placementPoints} placement)
+            </p>
+            <p>
+              Avant : ${result.beforePoints} pts • Après : ${result.afterPoints} pts • ${mpText}
+            </p>
           </div>
         `;
       }).join("");
@@ -853,174 +624,37 @@ const PUBLIC_API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsej
     function renderChampion() {
       const box = $("championBox");
       const name = $("championName");
+
       if (!state.championId) {
         box.classList.remove("show");
         name.textContent = "-";
         return;
       }
+
       const team = state.teams.find(t => t.id === state.championId);
+
       if (!team) {
         box.classList.remove("show");
         name.textContent = "-";
         return;
       }
+
       name.textContent = team.name;
       box.classList.add("show");
     }
 
-    function getNextRoundNumber() {
-      if (state.results.length === 0) return 1;
-      return Math.max(...state.results.map(r => Number(r.round) || 1)) + 1;
-    }
-
-    function renderRoundInput() {
-      if (!IS_ADMIN) return;
-      const input = $("roundNumber");
-      if (!input.value || Number(input.value) < 1) input.value = getNextRoundNumber();
-    }
-
-    function nextRound() {
-      $("roundNumber").value = getNextRoundNumber();
-      $("kills").value = 0;
-      $("placement").value = 1;
-    }
-
     function render() {
       rebuildStats();
-      renderSettings();
       renderStats();
       renderScoring();
       renderTeams();
-      renderTeamSelect();
       renderHistory();
       renderChampion();
-      renderRoundInput();
     }
 
-    if (IS_ADMIN) {
-      $("teamForm").addEventListener("submit", async function(event) {
-        event.preventDefault();
-        const name = $("teamName").value.trim();
-        const captain = $("captainName").value.trim();
-        const players = $("players").value.split(",").map(p => p.trim()).filter(Boolean);
-        if (!name) return;
-
-        state.teams.push({ id: uid(), name, captain, players, points: 0, kills: 0, wins: 0, games: 0 });
-        $("teamName").value = "";
-        $("captainName").value = "";
-        $("players").value = "";
-        render();
-        await saveCloud();
-      });
-
-      $("resultForm").addEventListener("submit", async function(event) {
-        event.preventDefault();
-
-        if (state.championId) {
-          const confirmAdd = confirm("Un champion est déjà détecté. Ajouter quand même ce résultat ?");
-          if (!confirmAdd) return;
-        }
-
-        const teamId = $("teamSelect").value;
-        const team = state.teams.find(t => t.id === teamId);
-        if (!team) return alert("Choisis une équipe valide.");
-
-        const round = Number($("roundNumber").value);
-        const kills = Number($("kills").value);
-        const placement = Number($("placement").value);
-
-        if (round < 1 || kills < 0 || placement < 1) return alert("Vérifie la manche, les kills et le placement.");
-
-        state.results.push({
-          id: uid(),
-          order: Date.now(),
-          round,
-          teamId,
-          teamName: team.name,
-          kills,
-          placement,
-          createdAt: new Date().toLocaleString("fr-FR")
-        });
-
-        $("kills").value = 0;
-        $("placement").value = 1;
-        render();
-        await saveCloud();
-      });
-    }
-
-    async function deleteTeam(teamId) {
-      if (!IS_ADMIN) return;
-      const team = state.teams.find(t => t.id === teamId);
-      if (!team) return;
-      if (!confirm(`Supprimer l'équipe "${team.name}" et ses résultats ?`)) return;
-      state.teams = state.teams.filter(t => t.id !== teamId);
-      state.results = state.results.filter(r => r.teamId !== teamId);
-      render();
-      await saveCloud();
-    }
-
-    async function deleteResult(resultId) {
-      if (!IS_ADMIN) return;
-      if (!confirm("Supprimer ce résultat ?")) return;
-      state.results = state.results.filter(r => r.id !== resultId);
-      render();
-      await saveCloud();
-    }
-
-    function copyDiscordAnnouncement() {
-      const teams = getSortedTeams();
-      const classement = teams.length
-        ? teams.map((team, index) => {
-            const status = state.championId === team.id ? "🏆 CHAMPION" : team.points >= Number(state.settings.threshold) ? "⚠️ MATCH POINT" : "En course";
-            return `${index + 1}. ${team.name} — ${team.points} pts | ${team.kills} kills | ${team.wins} wins | ${status}`;
-          }).join("\n")
-        : "Aucune équipe inscrite pour le moment.";
-
-      const message = `
-📢 SILENT LEGION — PARTIE PRIVÉE WARZONE
-
-🎮 Mode : Match Point
-🏠 Lobby : ${state.lobby.name || "-"}
-🔑 Code : ${state.lobby.code || "-"}
-👑 Host : ${state.lobby.host || "-"}
-🕘 Heure : ${state.lobby.startTime || "-"}
-
-📌 Règle :
-Une équipe doit atteindre ${state.settings.threshold} points pour passer en MATCH POINT.
-Ensuite, elle doit gagner une manche pour devenir championne.
-
-📊 Classement actuel :
-${classement}
-      `.trim();
-
-      navigator.clipboard.writeText(message)
-        .then(() => alert("Annonce Discord copiée !"))
-        .catch(() => { console.log(message); alert("Texte mis dans la console."); });
-    }
-
-    async function resetAll() {
-      if (!IS_ADMIN) return;
-      if (!confirm("Tout supprimer dans Google Sheets ?")) return;
-      state = {
-        lobby: { name: "Silent Legion Custom", code: "", host: "", startTime: "" },
-        settings: { threshold: 50, killPoint: 1, p1: 15, p2: 12, p3: 10, p5: 8, p10: 5 },
-        teams: [],
-        results: [],
-        championId: null
-      };
-      render();
-      await saveCloud();
-    }
-
-    renderConnection();
     render();
     loadCloud();
-
-    if (!IS_ADMIN) {
-      setInterval(loadCloud, 5000);
-    }
-
+    setInterval(loadCloud, 5000);
   </script>
 </body>
 </html>
