@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SILENT LEGION - Inscription équipe</title>
+<style>
+:root {
+  --text:#e8edf2; --muted:#9ca8b6; --blue:#00aaff; --blue2:#36c3ff;
+  --success:#33ff99; --danger:#ff4d4d; --warning:#ffd166; --border:rgba(0,170,255,.25);
+}
+* { box-sizing:border-box; margin:0; padding:0; font-family:Arial,Helvetica,sans-serif; }
+body {
+  min-height:100vh; color:var(--text);
+  background:radial-gradient(circle at top left,rgba(0,170,255,.18),transparent 35%),
+  linear-gradient(135deg,#05070c,#101722 45%,#05070c);
+}
+body:before {
+  content:""; position:fixed; inset:0; z-index:-1;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:36px 36px;
+}
+header {
+  padding:28px 6%; border-bottom:1px solid var(--border);
+  background:rgba(5,7,12,.85); backdrop-filter:blur(12px);
+}
+.header-row { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+.brand small { color:var(--blue); text-transform:uppercase; letter-spacing:4px; font-weight:bold; font-size:11px; }
+.brand h1 { font-size:clamp(28px,5vw,52px); text-transform:uppercase; letter-spacing:-2px; }
+.brand h1 span { color:var(--blue); text-shadow:0 0 18px rgba(0,170,255,.9); }
+.badge {
+  border:1px solid var(--border); color:var(--blue); padding:10px 14px; border-radius:999px;
+  font-weight:bold; background:rgba(0,170,255,.08); text-transform:uppercase; font-size:12px; letter-spacing:1px;
+}
+main { width:min(900px,94%); margin:30px auto 70px; display:grid; gap:22px; }
+.panel {
+  background:linear-gradient(145deg,rgba(17,23,34,.96),rgba(8,12,18,.96));
+  border:1px solid var(--border); border-radius:18px; padding:24px;
+  box-shadow:0 0 35px rgba(0,170,255,.08);
+}
+.panel h2 { font-size:24px; text-transform:uppercase; margin-bottom:12px; border-left:4px solid var(--blue); padding-left:12px; }
+.help { color:var(--muted); font-size:14px; line-height:1.5; margin-bottom:20px; }
+.grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:1px; font-weight:bold; }
+input, textarea {
+  width:100%; background:#070b12; border:1px solid rgba(255,255,255,.1); color:var(--text);
+  padding:13px 14px; border-radius:10px; outline:none;
+}
+input:focus, textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(0,170,255,.13); }
+textarea { min-height:100px; resize:vertical; }
+button {
+  width:100%; margin-top:18px; border:none; background:var(--blue); color:#02050a;
+  padding:14px 18px; border-radius:10px; font-weight:900; cursor:pointer; text-transform:uppercase; letter-spacing:.8px;
+}
+button:hover { background:var(--blue2); }
+button:disabled { opacity:.5; cursor:not-allowed; }
+.status { margin-top:18px; padding:14px; border-radius:12px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:var(--muted); }
+.ok { color:var(--success); border-color:rgba(51,255,153,.35); background:rgba(51,255,153,.08); }
+.error { color:#ffb3b3; border-color:rgba(255,77,77,.35); background:rgba(255,77,77,.08); }
+.warning { color:#ffe2a0; border-color:rgba(255,209,102,.35); background:rgba(255,209,102,.08); }
+.rules { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.rule { padding:16px; border-radius:14px; background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.08); }
+.rule strong { color:var(--blue); display:block; margin-bottom:5px; }
+.rule span { color:var(--muted); font-size:13px; }
+.counter {
+  margin-top:18px; padding:18px; border-radius:16px;
+  background:linear-gradient(145deg,rgba(0,170,255,.12),rgba(51,255,153,.05));
+  border:1px solid var(--border);
+}
+.counter strong { color:var(--blue); font-size:34px; display:block; margin-top:4px; }
+.progress { height:10px; background:rgba(255,255,255,.1); border-radius:99px; overflow:hidden; margin-top:12px; }
+.progress i { display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--blue),var(--success)); transition:.3s; }
+@media(max-width:700px) { .grid-2,.rules { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-row">
+    <div class="brand"><small>Inscription tournoi</small><h1>Silent <span>Legion</span></h1></div>
+    <div class="badge">Warzone Resurgence • Match Point</div>
+  </div>
+</header>
+
+<main>
+  <section class="panel">
+    <h2>Inscrire votre équipe</h2>
+    <p class="help">Remplissez le formulaire. Votre équipe sera ajoutée automatiquement au classement.</p>
+    <div class="rules">
+      <div class="rule"><strong>Format</strong><span>Warzone Resurgence</span></div>
+      <div class="rule"><strong>Équipe</strong><span>3 joueurs par équipe</span></div>
+      <div class="rule"><strong>Limite</strong><span>15 équipes maximum</span></div>
+    </div>
+
+    <div class="counter">
+      <span>Équipes inscrites</span>
+      <strong id="teamCounter">0 / 15</strong>
+      <div class="progress"><i id="progressBar"></i></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <form id="registerForm">
+      <div class="grid-2">
+        <div><label>Nom de l'équipe *</label><input id="teamName" type="text" required></div>
+        <div><label>Capitaine *</label><input id="captainName" type="text" required></div>
+        <div><label>Joueur 1 *</label><input id="player1" type="text" required></div>
+        <div><label>Joueur 2 *</label><input id="player2" type="text" required></div>
+        <div><label>Joueur 3 *</label><input id="player3" type="text" required></div>
+        <div><label>Discord / contact</label><input id="contact" type="text"></div>
+      </div>
+      <div style="margin-top:14px;">
+        <label>Commentaire</label>
+        <textarea id="note" placeholder="Optionnel : disponibilité, remplaçant, info utile..."></textarea>
+      </div>
+      <button id="submitBtn" type="submit">Valider l'inscription</button>
+      <div id="status" class="status">Chargement des places disponibles...</div>
+    </form>
+  </section>
+</main>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzDZuOXq2TEkNsejcYYzxeoX_cSYeEmF-53TbvrrIBnRGro-YJqF9AtbVU5qrjyX3xgbw/exec";
+const MAX_TEAMS = 15;
+const $ = id => document.getElementById(id);
+let currentTeams = 0;
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+function setStatus(message, type = "") {
+  const box = $("status");
+  box.className = "status " + type;
+  box.textContent = message;
+}
+
+function updateCounter(count) {
+  currentTeams = count;
+  $("teamCounter").textContent = count + " / " + MAX_TEAMS;
+  $("progressBar").style.width = Math.min(100, (count / MAX_TEAMS) * 100) + "%";
+
+  if (count >= MAX_TEAMS) {
+    $("submitBtn").disabled = true;
+    setStatus("Les inscriptions sont complètes. Limite atteinte : " + MAX_TEAMS + " équipes.", "warning");
+  } else {
+    $("submitBtn").disabled = false;
+    setStatus("Places disponibles : " + (MAX_TEAMS - count) + ".", "ok");
+  }
+}
+
+async function loadCount() {
+  try {
+    const response = await fetch(API_URL + "?action=get&t=" + Date.now());
+    const data = await response.json();
+    if (!data.ok) throw new Error(data.error || "Erreur API.");
+
+    const teams = Array.isArray(data.state?.teams) ? data.state.teams : [];
+    updateCounter(teams.length);
+  } catch (error) {
+    setStatus("Impossible de charger les places : " + error.message, "error");
+  }
+}
+
+$("registerForm").addEventListener("submit", async event => {
+  event.preventDefault();
+
+  if (currentTeams >= MAX_TEAMS) {
+    setStatus("Les inscriptions sont complètes.", "warning");
+    return;
+  }
+
+  const teamName = $("teamName").value.trim();
+  const captain = $("captainName").value.trim();
+  const players = [$("player1").value.trim(), $("player2").value.trim(), $("player3").value.trim()].filter(Boolean);
+  const contact = $("contact").value.trim();
+  const note = $("note").value.trim();
+
+  if (!teamName || !captain || players.length !== 3) {
+    setStatus("Merci de remplir le nom de l'équipe, le capitaine et les 3 joueurs.", "error");
+    return;
+  }
+
+  $("submitBtn").disabled = true;
+  setStatus("Inscription en cours...");
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        action: "registerTeam",
+        payload: {
+          id: uid(),
+          name: teamName,
+          captain,
+          players,
+          contact,
+          note,
+          points: 0,
+          kills: 0,
+          wins: 0,
+          games: 0,
+          registeredAt: new Date().toLocaleString("fr-FR")
+        }
+      })
+    });
+
+    const data = await response.json();
+    if (!data.ok) throw new Error(data.error || "Erreur pendant l'inscription.");
+
+    $("registerForm").reset();
+    setStatus("Inscription validée ! Votre équipe a été ajoutée au classement.", "ok");
+    await loadCount();
+  } catch (error) {
+    setStatus("Erreur : " + error.message, "error");
+    await loadCount();
+  }
+});
+
+loadCount();
+setInterval(loadCount, 5000);
+</script>
+</body>
+</html>
