@@ -38,6 +38,28 @@ button:hover{background:var(--blue2)}button:disabled{opacity:.5;cursor:not-allow
 .error{color:#ffb3b3;border-color:rgba(255,77,77,.35);background:rgba(255,77,77,.08)}
 .warning{color:#ffe2a0;border-color:rgba(255,209,102,.35);background:rgba(255,209,102,.08)}
 @media(max-width:700px){.grid-2,.rules{grid-template-columns:1fr}}
+.classement-btn{
+    display:block;
+    text-align:center;
+    margin-top:12px;
+    padding:14px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:1px;
+
+    background:transparent;
+    border:2px solid #00aaff;
+    color:#00aaff;
+
+    transition:0.2s;
+}
+
+.classement-btn:hover{
+    background:#00aaff;
+    color:#000;
+}  
 </style>
 </head>
 <body>
@@ -61,6 +83,10 @@ button:hover{background:var(--blue2)}button:disabled{opacity:.5;cursor:not-allow
 </div>
 <div style="margin-top:14px;"><label>Commentaire</label><textarea id="note" placeholder="Optionnel : disponibilité, remplaçant, info utile..."></textarea></div>
 <button id="submitBtn" type="submit">Valider l'inscription</button>
+<a href="https://over59150-ui.github.io/SL-TOURNAMENT/classement.html"
+   class="classement-btn">
+   Accéder au classement
+</a>  
 <div id="status" class="status">Chargement des places disponibles...</div>
 </form>
 </section>
