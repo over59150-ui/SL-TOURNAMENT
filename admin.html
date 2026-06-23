@@ -468,6 +468,57 @@
       margin-top: 8px;
     }
 
+  
+    .admin-chat-box {
+      display: grid;
+      gap: 14px;
+    }
+
+    .admin-chat-messages {
+      max-height: 360px;
+      overflow-y: auto;
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.28);
+    }
+
+    .admin-chat-message {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .admin-chat-message strong {
+      color: var(--blue);
+    }
+
+    .admin-chat-message small {
+      color: var(--muted);
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 11px;
+    }
+
+    .admin-chat-message p {
+      color: var(--text);
+      margin-top: 5px;
+      overflow-wrap: anywhere;
+    }
+
+    .admin-chat-tools {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
   </style>
 </head>
 <body data-mode="admin">
@@ -540,11 +591,11 @@
         <div class="grid-3">
           <div><label>Seuil Match Point</label><input id="threshold" type="number" min="1" value="50" /></div>
           <div><label>Point par kill</label><input id="killPoint" type="number" min="0" value="1" /></div>
-          <div><label>Multiplicateur Top 1</label><input id="p1" type="number" min="0" step="0.1" value="1.6" /></div>
-          <div><label>Multiplicateur Top 2</label><input id="p2" type="number" min="0" step="0.1" value="1.4" /></div>
-          <div><label>Multiplicateur Top 3</label><input id="p3" type="number" min="0" step="0.1" value="1.2" /></div>
-          <div><label>Multiplicateur Top 4</label><input id="p4" type="number" min="0" step="0.1" value="1.1" /></div>
-          <div><label>Top 5+</label><input type="text" value="x1" disabled /></div>
+          <div><label>Points Top 1</label><input id="p1" type="number" min="0" value="15" /></div>
+          <div><label>Points Top 2</label><input id="p2" type="number" min="0" value="12" /></div>
+          <div><label>Points Top 3</label><input id="p3" type="number" min="0" value="10" /></div>
+          <div><label>Points Top 5</label><input id="p5" type="number" min="0" value="8" /></div>
+          <div><label>Points Top 10</label><input id="p10" type="number" min="0" value="5" /></div>
         </div>
 
         <div class="actions">
@@ -608,6 +659,23 @@
       <h2>Historique des résultats</h2>
       <div id="history" class="history"></div>
     </section>
+
+    <section class="panel">
+      <h2>Modération du chat</h2>
+      <p class="help">Ici tu peux surveiller le chat, supprimer un message ou remettre le chat à zéro.</p>
+
+      <div class="admin-chat-box">
+        <div class="admin-chat-tools">
+          <button class="secondary" onclick="loadCloud()">Actualiser le chat</button>
+          <button class="danger" onclick="clearChat()">Réinitialiser le chat</button>
+        </div>
+
+        <div id="adminChatMessages" class="admin-chat-messages">
+          <div class="empty">Chargement du chat...</div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <script>
@@ -617,10 +685,11 @@
 
     let state = {
       lobby: { name: "Silent Legion Custom", code: "", host: "", startTime: "" },
-      settings: { threshold: 50, killPoint: 1, p1: 1.6, p2: 1.4, p3: 1.2, p4: 1.1, p5: 1, p10: 1 },
+      settings: { threshold: 50, killPoint: 1, p1: 15, p2: 12, p3: 10, p5: 8, p10: 5 },
       teams: [],
       results: [],
-      championId: null
+      championId: null,
+      chat: []
     };
 
     const $ = (id) => document.getElementById(id);
@@ -725,17 +794,19 @@
         settings: { ...state.settings, ...(data.settings || {}) },
         teams: Array.isArray(data.teams) ? data.teams : [],
         results: Array.isArray(data.results) ? data.results : [],
-        championId: data.championId || null
+        championId: data.championId || null,
+        chat: Array.isArray(data.chat) ? data.chat : []
       };
     }
 
-    function getPlacementMultiplier(place) {
+    function getPlacementPoints(place) {
       const s = state.settings;
-      if (place === 1) return Number(s.p1) || 1.6;
-      if (place === 2) return Number(s.p2) || 1.4;
-      if (place === 3) return Number(s.p3) || 1.2;
-      if (place === 4) return Number(s.p4) || 1.1;
-      return 1;
+      if (place === 1) return Number(s.p1);
+      if (place === 2) return Number(s.p2);
+      if (place === 3) return Number(s.p3);
+      if (place <= 5) return Number(s.p5);
+      if (place <= 10) return Number(s.p10);
+      return 0;
     }
 
     function rebuildStats() {
@@ -752,13 +823,13 @@
 
         const kills = Number(result.kills);
         const place = Number(result.placement);
-        const basePoints = kills * Number(state.settings.killPoint);
-        const multiplier = getPlacementMultiplier(place);
-        const total = Math.round(basePoints * multiplier * 10) / 10;
+        const killPoints = kills * Number(state.settings.killPoint);
+        const placementPoints = getPlacementPoints(place);
+        const total = killPoints + placementPoints;
         const wasEligible = team.points >= Number(state.settings.threshold);
 
-        result.killPoints = basePoints;
-        result.placementPoints = multiplier;
+        result.killPoints = killPoints;
+        result.placementPoints = placementPoints;
         result.total = total;
         result.beforePoints = team.points;
         result.wasEligible = wasEligible;
@@ -787,11 +858,11 @@
 
       state.settings.threshold = Number($("threshold").value) || 50;
       state.settings.killPoint = Number($("killPoint").value) || 1;
-      state.settings.p1 = Number($("p1").value) || 1.6;
-      state.settings.p2 = Number($("p2").value) || 1.4;
-      state.settings.p3 = Number($("p3").value) || 1.2;
-      state.settings.p4 = Number($("p4").value) || 1.1;
-      state.settings.p5 = 1; state.settings.p10 = 1;
+      state.settings.p1 = Number($("p1").value) || 0;
+      state.settings.p2 = Number($("p2").value) || 0;
+      state.settings.p3 = Number($("p3").value) || 0;
+      state.settings.p5 = Number($("p5").value) || 0;
+      state.settings.p10 = Number($("p10").value) || 0;
 
       rebuildStats();
       render();
@@ -809,7 +880,8 @@
       $("p1").value = state.settings.p1;
       $("p2").value = state.settings.p2;
       $("p3").value = state.settings.p3;
-      $("p4").value = state.settings.p4 || 1.1;
+      $("p5").value = state.settings.p5;
+      $("p10").value = state.settings.p10;
     }
 
     function renderStats() {
@@ -822,12 +894,13 @@
 
     function renderScoring() {
       $("scoringTable").innerHTML = `
-        <tr><td>Kill</td><td>${state.settings.killPoint} point(s) de base</td></tr>
-        <tr><td>Top 1</td><td>x${state.settings.p1}</td></tr>
-        <tr><td>Top 2</td><td>x${state.settings.p2}</td></tr>
-        <tr><td>Top 3</td><td>x${state.settings.p3}</td></tr>
-        <tr><td>Top 4</td><td>x${state.settings.p4}</td></tr>
-        <tr><td>Top 5+</td><td>x1</td></tr>
+        <tr><td>Kill</td><td>${state.settings.killPoint} point(s)</td></tr>
+        <tr><td>Top 1</td><td>${state.settings.p1} points</td></tr>
+        <tr><td>Top 2</td><td>${state.settings.p2} points</td></tr>
+        <tr><td>Top 3</td><td>${state.settings.p3} points</td></tr>
+        <tr><td>Top 4-5</td><td>${state.settings.p5} points</td></tr>
+        <tr><td>Top 6-10</td><td>${state.settings.p10} points</td></tr>
+        <tr><td>Top 11+</td><td>0 point</td></tr>
       `;
     }
 
@@ -905,7 +978,7 @@
           <div class="history-item">
             <div>
               <strong>Manche ${result.round} — ${escapeHtml(teamName)}${championText}</strong>
-              <p>Placement : Top ${result.placement} • Kills : ${result.kills} • Points : ${result.total} (${result.killPoints} pts kills × x${result.placementPoints})</p>
+              <p>Placement : Top ${result.placement} • Kills : ${result.kills} • Points : ${result.total} (${result.killPoints} kills + ${result.placementPoints} placement)</p>
               <p>Avant : ${result.beforePoints} pts • Après : ${result.afterPoints} pts • ${mpText}</p>
             </div>
             ${del}
@@ -959,6 +1032,7 @@
       renderHistory();
       renderChampion();
       renderRoundInput();
+      renderAdminChat();
     }
 
     if (IS_ADMIN) {
@@ -1032,6 +1106,60 @@
       await saveCloud();
     }
 
+
+    function renderAdminChat() {
+      const box = $("adminChatMessages");
+      if (!box) return;
+
+      const messages = Array.isArray(state.chat) ? state.chat.slice().reverse() : [];
+
+      if (messages.length === 0) {
+        box.innerHTML = `<div class="empty">Aucun message dans le chat pour le moment.</div>`;
+        return;
+      }
+
+      box.innerHTML = messages.map(message => `
+        <div class="admin-chat-message">
+          <div>
+            <strong>${escapeHtml(message.pseudo || "Anonyme")}</strong>
+            <small>${escapeHtml(message.createdAt || "")}</small>
+            <p>${escapeHtml(message.text || "")}</p>
+          </div>
+
+          <button class="small danger" onclick="deleteChatMessage('${message.id}')">
+            Supprimer
+          </button>
+        </div>
+      `).join("");
+    }
+
+    async function deleteChatMessage(messageId) {
+      if (!IS_ADMIN) return;
+      if (!confirm("Supprimer ce message du chat ?")) return;
+
+      try {
+        await api("deleteMessage", { id: messageId });
+        await loadCloud();
+        setStatus("Message supprimé du chat.");
+      } catch (e) {
+        alert("Erreur suppression message : " + e.message);
+      }
+    }
+
+    async function clearChat() {
+      if (!IS_ADMIN) return;
+      if (!confirm("Supprimer tous les messages du chat ?")) return;
+
+      try {
+        await api("clearChat", {});
+        await loadCloud();
+        setStatus("Chat réinitialisé.");
+      } catch (e) {
+        alert("Erreur réinitialisation chat : " + e.message);
+      }
+    }
+
+
     function copyDiscordAnnouncement() {
       const teams = getSortedTeams();
       const classement = teams.length
@@ -1068,10 +1196,11 @@ ${classement}
       if (!confirm("Tout supprimer dans Google Sheets ?")) return;
       state = {
         lobby: { name: "Silent Legion Custom", code: "", host: "", startTime: "" },
-        settings: { threshold: 50, killPoint: 1, p1: 1.6, p2: 1.4, p3: 1.2, p4: 1.1, p5: 1, p10: 1 },
+        settings: { threshold: 50, killPoint: 1, p1: 15, p2: 12, p3: 10, p5: 8, p10: 5 },
         teams: [],
         results: [],
-        championId: null
+        championId: null,
+        chat: []
       };
       render();
       await saveCloud();
