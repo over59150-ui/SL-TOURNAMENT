@@ -5,10 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SILENT LEGION - Inscription</title>
 <style>
-:root {
-  --text:#e8edf2; --muted:#9ca8b6; --blue:#00aaff; --blue2:#36c3ff;
-  --success:#33ff99; --danger:#ff4d4d; --warning:#ffd166; --border:rgba(0,170,255,.25);
-}
+:root { --text:#e8edf2; --muted:#9ca8b6; --blue:#00aaff; --blue2:#36c3ff; --success:#33ff99; --warning:#ffd166; --border:rgba(0,170,255,.25); }
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
 body{min-height:100vh;color:var(--text);background:radial-gradient(circle at top left,rgba(0,170,255,.18),transparent 35%),linear-gradient(135deg,#05070c,#101722 45%,#05070c)}
 body:before{content:"";position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:36px 36px}
@@ -44,42 +41,29 @@ button:hover{background:var(--blue2)}button:disabled{opacity:.5;cursor:not-allow
 </style>
 </head>
 <body>
-<header>
-  <div class="header-row">
-    <div class="brand"><small>Inscription tournoi</small><h1>Silent <span>Legion</span></h1></div>
-    <div class="badge">Warzone Resurgence • Match Point</div>
-  </div>
-</header>
+<header><div class="header-row"><div class="brand"><small>Inscription tournoi</small><h1>Silent <span>Legion</span></h1></div><div class="badge">Warzone Resurgence • Match Point</div></div></header>
 <main>
-  <section class="panel">
-    <h2>Inscrire votre équipe</h2>
-    <p class="help">Remplissez le formulaire. Votre équipe sera ajoutée automatiquement au classement.</p>
-    <div class="rules">
-      <div class="rule"><strong>Format</strong><span>Warzone Resurgence</span></div>
-      <div class="rule"><strong>Équipe</strong><span>3 joueurs par équipe</span></div>
-      <div class="rule"><strong>Limite</strong><span>15 équipes maximum</span></div>
-    </div>
-    <div class="counter">
-      <span>Équipes inscrites</span>
-      <strong id="teamCounter">0 / 15</strong>
-      <div class="progress"><i id="progressBar"></i></div>
-    </div>
-  </section>
-  <section class="panel">
-    <form id="registerForm">
-      <div class="grid-2">
-        <div><label>Nom de l'équipe *</label><input id="teamName" type="text" required></div>
-        <div><label>Capitaine *</label><input id="captainName" type="text" required></div>
-        <div><label>Joueur 1 *</label><input id="player1" type="text" required></div>
-        <div><label>Joueur 2 *</label><input id="player2" type="text" required></div>
-        <div><label>Joueur 3 *</label><input id="player3" type="text" required></div>
-        <div><label>Discord / contact</label><input id="contact" type="text"></div>
-      </div>
-      <div style="margin-top:14px;"><label>Commentaire</label><textarea id="note" placeholder="Optionnel : disponibilité, remplaçant, info utile..."></textarea></div>
-      <button id="submitBtn" type="submit">Valider l'inscription</button>
-      <div id="status" class="status">Chargement des places disponibles...</div>
-    </form>
-  </section>
+<section class="panel">
+<h2>Inscrire votre équipe</h2>
+<p class="help">Remplissez le formulaire. Votre équipe sera ajoutée automatiquement au classement.</p>
+<div class="rules"><div class="rule"><strong>Format</strong><span>Warzone Resurgence</span></div><div class="rule"><strong>Équipe</strong><span>3 joueurs par équipe</span></div><div class="rule"><strong>Limite</strong><span>15 équipes maximum</span></div></div>
+<div class="counter"><span>Équipes inscrites</span><strong id="teamCounter">0 / 15</strong><div class="progress"><i id="progressBar"></i></div></div>
+</section>
+<section class="panel">
+<form id="registerForm">
+<div class="grid-2">
+<div><label>Nom de l'équipe *</label><input id="teamName" type="text" required></div>
+<div><label>Capitaine *</label><input id="captainName" type="text" required></div>
+<div><label>Joueur 1 *</label><input id="player1" type="text" required></div>
+<div><label>Joueur 2 *</label><input id="player2" type="text" required></div>
+<div><label>Joueur 3 *</label><input id="player3" type="text" required></div>
+<div><label>Discord / contact</label><input id="contact" type="text"></div>
+</div>
+<div style="margin-top:14px;"><label>Commentaire</label><textarea id="note" placeholder="Optionnel : disponibilité, remplaçant, info utile..."></textarea></div>
+<button id="submitBtn" type="submit">Valider l'inscription</button>
+<div id="status" class="status">Chargement des places disponibles...</div>
+</form>
+</section>
 </main>
 <script>
 var API_URL = "https://script.google.com/macros/s/AKfycbw3D58ylYPGk-ZlzP55YcxKmmdtCw0_2-m-EGWpRh8KWHviv4Ewq013fyXSf2Alkgt4qA/exec";
@@ -87,26 +71,12 @@ var MAX_TEAMS = 15;
 var currentTeams = 0;
 
 function el(id) { return document.getElementById(id); }
-
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
-
 function setStatus(message, type) {
   var box = el("status");
-  if (!box) return;
   box.className = "status " + (type || "");
   box.textContent = message;
 }
-
-window.onerror = function(message, source, lineno) {
-  setStatus("Erreur JavaScript : " + message + "\nLigne : " + lineno, "error");
-};
-
-window.onunhandledrejection = function(event) {
-  var reason = event.reason;
-  var msg = reason && reason.message ? reason.message : String(reason);
-  setStatus("Erreur réseau/API : " + msg, "error");
-};
-
 function updateCounter(count) {
   currentTeams = count;
   el("teamCounter").textContent = count + " / " + MAX_TEAMS;
@@ -119,24 +89,21 @@ function updateCounter(count) {
     setStatus("Places disponibles : " + (MAX_TEAMS - count) + ".", "ok");
   }
 }
-
 async function loadCount() {
   try {
     setStatus("Chargement des places disponibles...");
-    var response = await fetch(API_URL + "?action=get&t=" + Date.now(), { method: "GET" });
+    var response = await fetch(API_URL + "?action=get&t=" + Date.now());
     var text = await response.text();
-    if (!text) throw new Error("Réponse vide de Google Apps Script.");
+    if (!text) throw new Error("Réponse vide Apps Script.");
     var data = JSON.parse(text);
-    if (!data.ok) throw new Error(data.error || "Réponse API non valide.");
-    var teams = [];
-    if (data.state && Array.isArray(data.state.teams)) teams = data.state.teams;
+    if (!data.ok) throw new Error(data.error || "Erreur API.");
+    var teams = data.state && Array.isArray(data.state.teams) ? data.state.teams : [];
     updateCounter(teams.length);
   } catch (error) {
     console.error(error);
-    setStatus("Impossible de charger les places.\nDétail : " + error.message, "error");
+    setStatus("Impossible de charger les places. Détail : " + error.message, "error");
   }
 }
-
 async function registerTeam(event) {
   event.preventDefault();
   if (currentTeams >= MAX_TEAMS) {
@@ -145,7 +112,7 @@ async function registerTeam(event) {
   }
   var teamName = el("teamName").value.trim();
   var captain = el("captainName").value.trim();
-  var players = [el("player1").value.trim(), el("player2").value.trim(), el("player3").value.trim()].filter(function(v) { return v.length > 0; });
+  var players = [el("player1").value.trim(), el("player2").value.trim(), el("player3").value.trim()].filter(Boolean);
   var contact = el("contact").value.trim();
   var note = el("note").value.trim();
   if (!teamName || !captain || players.length !== 3) {
@@ -176,7 +143,7 @@ async function registerTeam(event) {
       })
     });
     var text = await response.text();
-    if (!text) throw new Error("Réponse vide de Google Apps Script.");
+    if (!text) throw new Error("Réponse vide Apps Script.");
     var data = JSON.parse(text);
     if (!data.ok) throw new Error(data.error || "Erreur pendant l'inscription.");
     el("registerForm").reset();
@@ -188,7 +155,6 @@ async function registerTeam(event) {
     await loadCount();
   }
 }
-
 document.addEventListener("DOMContentLoaded", function() {
   el("registerForm").addEventListener("submit", registerTeam);
   loadCount();
