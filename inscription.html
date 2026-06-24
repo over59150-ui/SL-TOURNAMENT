@@ -3,189 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SILENT LEGION - Inscription</title>
+<title>SILENT LEGION - Inscription Match Point</title>
 <style>
-:root { --text:#e8edf2; --muted:#9ca8b6; --blue:#00aaff; --blue2:#36c3ff; --success:#33ff99; --warning:#ffd166; --border:rgba(0,170,255,.25); }
+:root{--text:#e8edf2;--muted:#9ca8b6;--blue:#00aaff;--blue2:#36c3ff;--success:#33ff99;--warning:#ffd166;--danger:#ff4d4d;--border:rgba(0,170,255,.25)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
 body{min-height:100vh;color:var(--text);background:radial-gradient(circle at top left,rgba(0,170,255,.18),transparent 35%),linear-gradient(135deg,#05070c,#101722 45%,#05070c)}
 body:before{content:"";position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:36px 36px}
 header{padding:28px 6%;border-bottom:1px solid var(--border);background:rgba(5,7,12,.85)}
-.header-row{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
-.brand small{color:var(--blue);text-transform:uppercase;letter-spacing:4px;font-weight:bold;font-size:11px}
-.brand h1{font-size:clamp(28px,5vw,52px);text-transform:uppercase;letter-spacing:-2px}
-.brand h1 span{color:var(--blue);text-shadow:0 0 18px rgba(0,170,255,.9)}
-.badge{border:1px solid var(--border);color:var(--blue);padding:10px 14px;border-radius:999px;font-weight:bold;background:rgba(0,170,255,.08);text-transform:uppercase;font-size:12px;letter-spacing:1px}
-main{width:min(900px,94%);margin:30px auto 70px;display:grid;gap:22px}
-.panel{background:linear-gradient(145deg,rgba(17,23,34,.96),rgba(8,12,18,.96));border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:0 0 35px rgba(0,170,255,.08)}
-.panel h2{font-size:24px;text-transform:uppercase;margin-bottom:12px;border-left:4px solid var(--blue);padding-left:12px}
-.help{color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:20px}
-.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.rule{padding:16px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08)}
-.rule strong{color:var(--blue);display:block;margin-bottom:5px}
-.rule span{color:var(--muted);font-size:13px}
-.counter{margin-top:18px;padding:18px;border-radius:16px;background:linear-gradient(145deg,rgba(0,170,255,.12),rgba(51,255,153,.05));border:1px solid var(--border)}
-.counter strong{color:var(--blue);font-size:34px;display:block;margin-top:4px}
-.progress{height:10px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin-top:12px}
-.progress i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--success));transition:.3s}
-.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;font-weight:bold}
-input,textarea{width:100%;background:#070b12;border:1px solid rgba(255,255,255,.1);color:var(--text);padding:13px 14px;border-radius:10px;outline:none}
-textarea{min-height:100px;resize:vertical}
-button{width:100%;margin-top:18px;border:none;background:var(--blue);color:#02050a;padding:14px 18px;border-radius:10px;font-weight:900;cursor:pointer;text-transform:uppercase;letter-spacing:.8px}
-button:hover{background:var(--blue2)}button:disabled{opacity:.5;cursor:not-allowed}
-.status{margin-top:18px;padding:14px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);white-space:pre-wrap}
-.ok{color:var(--success);border-color:rgba(51,255,153,.35);background:rgba(51,255,153,.08)}
-.error{color:#ffb3b3;border-color:rgba(255,77,77,.35);background:rgba(255,77,77,.08)}
-.warning{color:#ffe2a0;border-color:rgba(255,209,102,.35);background:rgba(255,209,102,.08)}
-@media(max-width:700px){.grid-2,.rules{grid-template-columns:1fr}}
-.classement-btn{
-    display:block;
-    text-align:center;
-    margin-top:12px;
-    padding:14px;
-    border-radius:10px;
-    text-decoration:none;
-    font-weight:900;
-    text-transform:uppercase;
-    letter-spacing:1px;
-
-    background:transparent;
-    border:2px solid #00aaff;
-    color:#00aaff;
-
-    transition:0.2s;
-}
-
-.classement-btn:hover{
-    background:#00aaff;
-    color:#000;
-}  
+.header-row{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}.brand small{color:var(--blue);text-transform:uppercase;letter-spacing:4px;font-weight:bold;font-size:11px}.brand h1{font-size:clamp(28px,5vw,52px);text-transform:uppercase;letter-spacing:-2px}.brand h1 span{color:var(--blue);text-shadow:0 0 18px rgba(0,170,255,.9)}
+.badge,.linkbtn{border:1px solid var(--border);color:var(--blue);padding:10px 14px;border-radius:999px;font-weight:bold;background:rgba(0,170,255,.08);text-transform:uppercase;font-size:12px;letter-spacing:1px;text-decoration:none}.top-actions{display:flex;gap:10px;flex-wrap:wrap}
+main{width:min(1000px,94%);margin:30px auto 70px;display:grid;gap:22px}.panel{background:linear-gradient(145deg,rgba(17,23,34,.96),rgba(8,12,18,.96));border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:0 0 35px rgba(0,170,255,.08)}
+.panel h2{font-size:24px;text-transform:uppercase;margin-bottom:12px;border-left:4px solid var(--blue);padding-left:12px}.help{color:var(--muted);font-size:14px;line-height:1.5;margin-bottom:20px}.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.rule{padding:16px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08)}.rule strong{color:var(--blue);display:block;margin-bottom:5px}.rule span{color:var(--muted);font-size:13px}
+.counter{margin-top:18px;padding:18px;border-radius:16px;background:linear-gradient(145deg,rgba(0,170,255,.12),rgba(51,255,153,.05));border:1px solid var(--border)}.counter strong{color:var(--blue);font-size:34px;display:block;margin-top:4px}.progress{height:10px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin-top:12px}.progress i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--success));transition:.3s}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;font-weight:bold}input,textarea{width:100%;background:#070b12;border:1px solid rgba(255,255,255,.1);color:var(--text);padding:13px 14px;border-radius:10px;outline:none}input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,170,255,.13)}textarea{min-height:100px;resize:vertical}button{border:none;background:var(--blue);color:#02050a;padding:14px 18px;border-radius:10px;font-weight:900;cursor:pointer;text-transform:uppercase;letter-spacing:.8px}button:hover{background:var(--blue2)}button:disabled{opacity:.5;cursor:not-allowed}.secondary{background:transparent;border:1px solid rgba(255,255,255,.18);color:var(--text)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.status{margin-top:18px;padding:14px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);white-space:pre-wrap}.ok{color:var(--success);border-color:rgba(51,255,153,.35);background:rgba(51,255,153,.08)}.error{color:#ffb3b3;border-color:rgba(255,77,77,.35);background:rgba(255,77,77,.08)}.warning{color:#ffe2a0;border-color:rgba(255,209,102,.35);background:rgba(255,209,102,.08)}.codebox{font-size:28px;color:var(--success);font-weight:900;letter-spacing:2px;font-family:monospace}.submission{padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.25);margin-top:10px}.submission small{color:var(--muted)}
+@media(max-width:760px){.grid-2,.grid-3,.rules{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><div class="header-row"><div class="brand"><small>Inscription tournoi</small><h1>Silent <span>Legion</span></h1></div><div class="badge">Warzone Resurgence • Match Point</div></div></header>
+<header><div class="header-row"><div class="brand"><small>Inscription tournoi</small><h1>Silent <span>Legion</span></h1></div><div class="top-actions"><a class="linkbtn" href="classement.html">Classement</a><div class="badge">Warzone • Match Point</div></div></div></header>
 <main>
 <section class="panel">
 <h2>Inscrire votre équipe</h2>
-<p class="help">Remplissez le formulaire. Votre équipe sera ajoutée automatiquement au classement.</p>
+<p class="help">Après validation, un code privé sera généré. Gardez-le : il sert à accéder à l'espace équipe et à envoyer vos screens / scores.</p>
 <div class="rules"><div class="rule"><strong>Format</strong><span>Warzone Resurgence</span></div><div class="rule"><strong>Équipe</strong><span>3 joueurs par équipe</span></div><div class="rule"><strong>Limite</strong><span>15 équipes maximum</span></div></div>
 <div class="counter"><span>Équipes inscrites</span><strong id="teamCounter">0 / 15</strong><div class="progress"><i id="progressBar"></i></div></div>
 </section>
 <section class="panel">
+<h2>Formulaire d'inscription</h2>
 <form id="registerForm">
-<div class="grid-2">
-<div><label>Nom de l'équipe *</label><input id="teamName" type="text" required></div>
-<div><label>Capitaine *</label><input id="captainName" type="text" required></div>
-<div><label>Joueur 1 *</label><input id="player1" type="text" required></div>
-<div><label>Joueur 2 *</label><input id="player2" type="text" required></div>
-<div><label>Joueur 3 *</label><input id="player3" type="text" required></div>
-<div><label>Discord / contact</label><input id="contact" type="text"></div>
-</div>
-<div style="margin-top:14px;"><label>Commentaire</label><textarea id="note" placeholder="Optionnel : disponibilité, remplaçant, info utile..."></textarea></div>
-<button id="submitBtn" type="submit">Valider l'inscription</button>
-<a href="https://over59150-ui.github.io/SL-TOURNAMENT/classement.html"
-   class="classement-btn">
-   Accéder au classement
-</a>  
+<div class="grid-2"><div><label>Nom de l'équipe *</label><input id="teamName" required></div><div><label>Capitaine *</label><input id="captainName" required></div><div><label>Joueur 1 *</label><input id="player1" required></div><div><label>Joueur 2 *</label><input id="player2" required></div><div><label>Joueur 3 *</label><input id="player3" required></div><div><label>Discord / contact</label><input id="contact"></div></div>
+<div style="margin-top:14px"><label>Commentaire</label><textarea id="note" placeholder="Optionnel : disponibilité, remplaçant, info utile..."></textarea></div>
+<div class="actions"><button id="submitBtn" type="submit">Valider l'inscription</button><button class="secondary" type="button" onclick="loadCount()">Actualiser</button></div>
 <div id="status" class="status">Chargement des places disponibles...</div>
 </form>
+</section>
+<section class="panel">
+<h2>Espace équipe - envoi score et screens</h2>
+<p class="help">Entre ton code privé. Ensuite, renseigne la manche, les kills, le placement et ajoute les deux screens. L'admin devra valider l'envoi avant qu'il soit ajouté au classement.</p>
+<div class="grid-2"><div><label>Code équipe</label><input id="teamCode" placeholder="Ex : MP-A1B2C3"></div><div style="display:flex;align-items:end"><button style="width:100%" onclick="loginTeam()">Accéder</button></div></div>
+<div id="teamSpace" style="display:none;margin-top:18px">
+<div class="status ok">Connecté : <strong id="spaceTeamName"></strong></div>
+<form id="scoreForm">
+<div class="grid-3" style="margin-top:14px"><div><label>Manche n°</label><input id="roundNumber" type="number" min="1" value="1" required></div><div><label>Kills équipe</label><input id="kills" type="number" min="0" value="0" required></div><div><label>Placement</label><input id="placement" type="number" min="1" value="1" required></div></div>
+<div class="grid-2" style="margin-top:14px"><div><label>Screen Top / placement *</label><input id="screenshotTop" type="file" accept="image/*" required></div><div><label>Screen Scoreboard / kills *</label><input id="screenshotScoreboard" type="file" accept="image/*" required></div></div>
+<div style="margin-top:14px"><label>Commentaire</label><textarea id="scoreNote" placeholder="Ex : manche 3, bug lobby, précision admin..."></textarea></div>
+<div class="actions"><button id="scoreBtn" type="submit">Envoyer à l'admin</button></div>
+<div id="scoreStatus" class="status">Aucun envoi pour le moment.</div>
+</form>
+<div id="mySubmissions"></div>
+</div>
 </section>
 </main>
 <script>
 var API_URL = "https://script.google.com/macros/s/AKfycbw3D58ylYPGk-ZlzP55YcxKmmdtCw0_2-m-EGWpRh8KWHviv4Ewq013fyXSf2Alkgt4qA/exec";
 var MAX_TEAMS = 15;
 var currentTeams = 0;
-
-function el(id) { return document.getElementById(id); }
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
-function setStatus(message, type) {
-  var box = el("status");
-  box.className = "status " + (type || "");
-  box.textContent = message;
-}
-function updateCounter(count) {
-  currentTeams = count;
-  el("teamCounter").textContent = count + " / " + MAX_TEAMS;
-  el("progressBar").style.width = Math.min(100, (count / MAX_TEAMS) * 100) + "%";
-  if (count >= MAX_TEAMS) {
-    el("submitBtn").disabled = true;
-    setStatus("Les inscriptions sont complètes. Limite atteinte : " + MAX_TEAMS + " équipes.", "warning");
-  } else {
-    el("submitBtn").disabled = false;
-    setStatus("Places disponibles : " + (MAX_TEAMS - count) + ".", "ok");
-  }
-}
-async function loadCount() {
-  try {
-    setStatus("Chargement des places disponibles...");
-    var response = await fetch(API_URL + "?action=get&t=" + Date.now());
-    var text = await response.text();
-    if (!text) throw new Error("Réponse vide Apps Script.");
-    var data = JSON.parse(text);
-    if (!data.ok) throw new Error(data.error || "Erreur API.");
-    var teams = data.state && Array.isArray(data.state.teams) ? data.state.teams : [];
-    updateCounter(teams.length);
-  } catch (error) {
-    console.error(error);
-    setStatus("Impossible de charger les places. Détail : " + error.message, "error");
-  }
-}
-async function registerTeam(event) {
-  event.preventDefault();
-  if (currentTeams >= MAX_TEAMS) {
-    setStatus("Les inscriptions sont complètes.", "warning");
-    return;
-  }
-  var teamName = el("teamName").value.trim();
-  var captain = el("captainName").value.trim();
-  var players = [el("player1").value.trim(), el("player2").value.trim(), el("player3").value.trim()].filter(Boolean);
-  var contact = el("contact").value.trim();
-  var note = el("note").value.trim();
-  if (!teamName || !captain || players.length !== 3) {
-    setStatus("Merci de remplir le nom de l'équipe, le capitaine et les 3 joueurs.", "error");
-    return;
-  }
-  el("submitBtn").disabled = true;
-  setStatus("Inscription en cours...");
-  try {
-    var response = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({
-        action: "registerTeam",
-        payload: {
-          id: uid(),
-          name: teamName,
-          captain: captain,
-          players: players,
-          contact: contact,
-          note: note,
-          points: 0,
-          kills: 0,
-          wins: 0,
-          games: 0,
-          registeredAt: new Date().toLocaleString("fr-FR")
-        }
-      })
-    });
-    var text = await response.text();
-    if (!text) throw new Error("Réponse vide Apps Script.");
-    var data = JSON.parse(text);
-    if (!data.ok) throw new Error(data.error || "Erreur pendant l'inscription.");
-    el("registerForm").reset();
-    setStatus("Inscription validée ! Votre équipe a été ajoutée au classement.", "ok");
-    await loadCount();
-  } catch (error) {
-    console.error(error);
-    setStatus("Erreur inscription : " + error.message, "error");
-    await loadCount();
-  }
-}
-document.addEventListener("DOMContentLoaded", function() {
-  el("registerForm").addEventListener("submit", registerTeam);
-  loadCount();
-  setInterval(loadCount, 5000);
-});
+var state = { teams: [], submissions: [] };
+var currentTeam = null;
+function el(id){return document.getElementById(id)}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8).toUpperCase()}
+function escapeHtml(v){return String(v||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function setStatus(id,message,type){var box=el(id);box.className="status "+(type||"");box.innerHTML=message}
+async function api(action,payload,method){var res;if(method==="GET"){res=await fetch(API_URL+"?action="+encodeURIComponent(action)+"&t="+Date.now())}else{res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:action,payload:payload||{}})})}var text=await res.text();var data;try{data=JSON.parse(text)}catch(e){throw new Error("Réponse Google Script invalide : "+text.slice(0,120))}if(!data.ok)throw new Error(data.error||"Erreur API");return data}
+function updateCounter(count){currentTeams=count;el("teamCounter").textContent=count+" / "+MAX_TEAMS;el("progressBar").style.width=Math.min(100,(count/MAX_TEAMS)*100)+"%";if(count>=MAX_TEAMS){el("submitBtn").disabled=true;setStatus("status","Les inscriptions sont complètes. Limite atteinte : "+MAX_TEAMS+" équipes.","warning")}else{el("submitBtn").disabled=false;setStatus("status","Places disponibles : "+(MAX_TEAMS-count)+".","ok")}}
+async function loadCount(){try{setStatus("status","Chargement des places disponibles...");var data=await api("get",{},"GET");state=data.state||state;var teams=Array.isArray(state.teams)?state.teams:[];updateCounter(teams.length)}catch(error){setStatus("status","Impossible de charger les places. Détail : "+error.message,"error")}}
+el("registerForm").addEventListener("submit",async function(event){event.preventDefault();if(currentTeams>=MAX_TEAMS){setStatus("status","Les inscriptions sont complètes.","warning");return}var teamName=el("teamName").value.trim();var captain=el("captainName").value.trim();var players=[el("player1").value.trim(),el("player2").value.trim(),el("player3").value.trim()].filter(Boolean);if(!teamName||!captain||players.length!==3){setStatus("status","Merci de remplir le nom de l'équipe, le capitaine et les 3 joueurs.","error");return}el("submitBtn").disabled=true;setStatus("status","Inscription en cours...");try{var data=await api("registerTeam",{id:uid(),name:teamName,captain:captain,players:players,contact:el("contact").value.trim(),note:el("note").value.trim(),registeredAt:new Date().toLocaleString("fr-FR")},"POST");state=data.state||state;el("registerForm").reset();updateCounter((state.teams||[]).length);setStatus("status",`Inscription validée !<br>Code privé équipe : <span class="codebox">${escapeHtml(data.code)}</span><br>Garde ce code pour envoyer tes scores et screens.`,"ok")}catch(error){setStatus("status","Erreur : "+error.message,"error")}finally{el("submitBtn").disabled=false}});
+async function loginTeam(){try{var data=await api("get",{},"GET");state=data.state||state;var code=el("teamCode").value.trim().toUpperCase();currentTeam=(state.teams||[]).find(function(t){return String(t.code||"").toUpperCase()===code});if(!currentTeam)throw new Error("Code équipe invalide.");el("teamSpace").style.display="block";el("spaceTeamName").textContent=currentTeam.name;renderMySubmissions()}catch(e){alert(e.message)}}
+function fileToBase64(file){return new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve(r.result)};r.onerror=reject;r.readAsDataURL(file)})}
+el("scoreForm").addEventListener("submit",async function(e){e.preventDefault();var btn=el("scoreBtn");btn.disabled=true;try{if(!currentTeam)throw new Error("Connecte-toi à ton espace équipe.");var top=el("screenshotTop").files[0];var board=el("screenshotScoreboard").files[0];if(!top)throw new Error("Ajoute le screen Top / placement.");if(!board)throw new Error("Ajoute le screen Scoreboard / kills.");if(top.size>5*1024*1024||board.size>5*1024*1024)throw new Error("Chaque image doit faire moins de 5 Mo.");setStatus("scoreStatus","Envoi en cours...");var data=await api("submitMatchScore",{id:uid(),teamCode:currentTeam.code,round:Number(el("roundNumber").value),kills:Number(el("kills").value),placement:Number(el("placement").value),note:el("scoreNote").value.trim(),fileDataTop:await fileToBase64(top),fileNameTop:top.name,fileDataScoreboard:await fileToBase64(board),fileNameScoreboard:board.name},"POST");state=data.state||state;el("scoreForm").reset();el("roundNumber").value=1;el("kills").value=0;el("placement").value=1;setStatus("scoreStatus","Score envoyé. En attente de validation admin.","ok");renderMySubmissions()}catch(err){setStatus("scoreStatus","Erreur : "+err.message,"error")}finally{btn.disabled=false}});
+function renderMySubmissions(){if(!currentTeam)return;var list=(state.submissions||[]).filter(function(s){return s.teamId===currentTeam.id||String(s.teamCode||"").toUpperCase()===String(currentTeam.code||"").toUpperCase()}).sort(function(a,b){return String(b.createdAt||"").localeCompare(String(a.createdAt||""))});el("mySubmissions").innerHTML=list.length?`<h2 style="margin-top:20px">Mes envois</h2>`+list.map(function(s){var st=s.status==="approved"?"Validé":s.status==="rejected"?"Refusé":"En attente";return `<div class="submission"><strong>Manche ${escapeHtml(s.round)}</strong> • ${escapeHtml(s.kills)} kills • Top ${escapeHtml(s.placement)}<br><small>Statut : ${st} • ${escapeHtml(s.createdAt)}</small></div>`}).join(""):""}
+document.addEventListener("DOMContentLoaded",loadCount);
 </script>
 </body>
 </html>
