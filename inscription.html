@@ -53,6 +53,37 @@ main{width:min(1000px,94%);margin:30px auto 70px;display:grid;gap:22px}.panel{ba
 @media(max-width:900px){.sl-controller-grid{grid-template-columns:1fr}.sl-stick-zone{width:240px;height:240px}.sl-controller-modal{padding:14px}.sl-controller-app{padding:20px}}
 @media(max-width:550px){.sl-values{grid-template-columns:1fr}}
 
+
+/* === SL Captain Tool intégré === */
+.sl-captain-launcher{
+  position:fixed;
+  right:7%;
+  top:52%;
+  transform:translateY(-50%);
+  z-index:20;
+  width:260px;
+  padding:18px;
+  border-radius:20px;
+  border:1px solid rgba(0,170,255,.45);
+  background:linear-gradient(145deg,rgba(0,170,255,.16),rgba(8,12,18,.94));
+  color:var(--text);
+  box-shadow:0 0 35px rgba(0,170,255,.16);
+  text-align:left;
+  cursor:pointer;
+}
+.sl-captain-launcher:hover{transform:translateY(calc(-50% - 2px));background:linear-gradient(145deg,rgba(0,170,255,.24),rgba(8,12,18,.96))}
+.sl-captain-launcher small{display:block;color:var(--blue);text-transform:uppercase;letter-spacing:2px;font-weight:900;font-size:10px;margin-bottom:7px}
+.sl-captain-launcher strong{display:block;font-size:20px;text-transform:uppercase;line-height:1.05}
+.sl-captain-launcher span{display:block;color:var(--muted);font-size:12px;margin-top:8px;line-height:1.35}
+.sl-captain-modal{position:fixed;inset:0;z-index:1000;display:none;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);padding:24px;overflow:auto}
+.sl-captain-modal.show{display:block}
+.sl-captain-app{width:min(760px,100%);margin:auto;background:linear-gradient(145deg,rgba(17,23,34,.98),rgba(5,7,12,.98));border:1px solid rgba(0,170,255,.35);border-radius:22px;padding:28px;box-shadow:0 0 50px rgba(0,170,255,.18)}
+.sl-captain-head{text-align:center;padding:24px 20px;margin-bottom:22px;background:rgba(10,15,24,.9);border:1px solid rgba(0,170,255,.45);border-radius:20px;box-shadow:0 0 35px rgba(0,170,255,.18)}
+.sl-captain-head small{color:var(--blue);font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:4px;display:block;margin-bottom:10px}.sl-captain-head h1{font-size:clamp(28px,5vw,48px);text-transform:uppercase;line-height:1}.sl-captain-head h1 span{color:var(--blue);text-shadow:0 0 18px rgba(0,170,255,.9)}.sl-captain-head p{color:var(--muted);margin-top:12px;font-size:15px}
+.sl-captain-close{width:auto!important;background:transparent!important;border:1px solid rgba(255,255,255,.18)!important;color:var(--text)!important;margin:0 0 18px auto!important;display:block!important}.sl-captain-tool{background:rgba(15,23,36,.96);border:1px solid rgba(255,255,255,.08);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.35)}.sl-captain-top{background:linear-gradient(90deg,#151f2e,#0b111c);border-bottom:1px solid rgba(0,170,255,.25);padding:18px 22px}.sl-captain-top h2{color:#eaf3ff;text-transform:uppercase;font-size:20px}.sl-captain-top p{color:#8f9bad;margin-top:5px;font-size:14px}.sl-captain-form{padding:24px}.sl-captain-section{color:var(--blue);text-transform:uppercase;font-size:13px;letter-spacing:2px;font-weight:bold;margin:22px 0 12px;border-left:3px solid var(--blue);padding-left:10px}.sl-captain-section:first-child{margin-top:0}.sl-captain-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.sl-captain-form select{width:100%;background:#070b12;border:1px solid rgba(255,255,255,.1);color:var(--text);padding:13px 14px;border-radius:10px;outline:none}.sl-captain-form select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,170,255,.13)}.sl-captain-map{background:linear-gradient(rgba(0,170,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,170,255,.08) 1px,transparent 1px),radial-gradient(circle at center,#1c2737,#080c14);background-size:35px 35px,35px 35px,cover;border:1px solid rgba(0,170,255,.35);border-radius:16px;padding:18px;margin-bottom:16px;text-align:center}.sl-captain-map h3{color:var(--blue);text-transform:uppercase;margin-bottom:6px}.sl-captain-map p{color:var(--muted);font-size:14px}.sl-captain-roster{display:grid;gap:12px}.sl-captain-player{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px}.sl-captain-player strong{display:block;color:var(--blue);margin-bottom:10px;text-transform:uppercase;font-size:12px;letter-spacing:1px}.sl-captain-copy{width:100%;margin-top:10px}.sl-captain-preview{margin-top:18px;background:#070b12;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;color:var(--muted);font-size:14px;line-height:1.5}.sl-captain-footer{text-align:center;color:#6f7b8d;font-size:13px;margin-top:18px}
+@media(max-width:1350px){.sl-captain-launcher{position:static;transform:none;width:min(1000px,94%);margin:12px auto 0}.sl-captain-launcher:hover{transform:translateY(-2px)}}
+@media(max-width:650px){.sl-captain-row{grid-template-columns:1fr}.sl-captain-form{padding:18px}.sl-captain-modal{padding:14px}.sl-captain-app{padding:20px}}
+
 </style>
 </head>
 <body>
@@ -61,6 +92,12 @@ main{width:min(1000px,94%);margin:30px auto 70px;display:grid;gap:22px}.panel{ba
   <small>Outil gratuit</small>
   <strong>Test manette</strong>
   <span>Diagnostic drift joystick + deadzones avant le tournoi</span>
+</button>
+
+<button class="sl-captain-launcher" type="button" onclick="openSLCaptainTool()">
+  <small>Outil capitaine</small>
+  <strong>Captain Tool</strong>
+  <span>Plan de drop, rôles et stratégie à copier sur Discord</span>
 </button>
 
 <main>
@@ -118,6 +155,41 @@ main{width:min(1000px,94%);margin:30px auto 70px;display:grid;gap:22px}.panel{ba
       <section class="sl-controller-panel"><h2>Joystick droit</h2><p class="sl-controller-help">Généralement utilisé pour la caméra / visée. Axes lus : 2 et 3.</p><div class="sl-stick-zone"><div class="sl-axis-x"></div><div class="sl-axis-y"></div><div class="sl-deadzone-circle" id="slRightDeadzoneCircle"></div><div class="sl-dot right" id="slRightDot"></div></div><label>Deadzone droite : <span id="slRightDeadzoneValue">0.08</span></label><input id="slRightDeadzone" type="range" min="0" max="0.30" step="0.01" value="0.08"><button type="button" onclick="slCalibrateRight()">Calibrer joystick droit</button><div class="sl-values"><div class="sl-value"><small>Axe X</small><strong id="slRightXValue">0.000</strong></div><div class="sl-value"><small>Axe Y</small><strong id="slRightYValue">0.000</strong></div><div class="sl-value"><small>Intensité</small><strong id="slRightMagnitudeValue">0.000</strong></div></div><div id="slRightAnalysis" class="sl-result-box sl-neutral">En attente de la manette...</div></section>
     </div>
     <div class="sl-controller-footer">Cette page lit seulement les mouvements de la manette. Elle ne contrôle pas la manette et n’envoie aucun input au jeu.</div>
+  </div>
+</div>
+
+
+<div id="slCaptainModal" class="sl-captain-modal" aria-hidden="true">
+  <div class="sl-captain-app">
+    <button class="sl-captain-close" type="button" onclick="closeSLCaptainTool()">Fermer</button>
+    <div class="sl-captain-head">
+      <small>Warzone Strategy Manager</small>
+      <h1>Silent Legion <span>Captain Tool</span></h1>
+      <p>Prépare rapidement une stratégie claire pour ton roster avant la game.</p>
+    </div>
+    <div class="sl-captain-tool">
+      <div class="sl-captain-top"><h2>Plan de partie</h2><p>Remplis les infos, puis copie la stratégie pour Discord.</p></div>
+      <div class="sl-captain-form">
+        <div class="sl-captain-section">Map & Drop</div>
+        <div class="sl-captain-row">
+          <div><label>Map</label><select id="slCaptainMap" onchange="slCaptainUpdateMapBox()"><option>Rebirth Island</option><option>Fortune's Keep</option><option>Haven's Hollow</option></select></div>
+          <div><label>Drop principal</label><input id="slCaptainDrop" placeholder="Ex : Prison, Keep, Market..."></div>
+        </div>
+        <div class="sl-captain-map"><h3 id="slCaptainMapTitle">Rebirth Island</h3><p id="slCaptainMapText">Choisis le drop principal et donne une consigne simple à ton roster.</p></div>
+        <div class="sl-captain-section">Roster 3 joueurs</div>
+        <div class="sl-captain-roster">
+          <div class="sl-captain-player"><strong>Joueur 1</strong><div class="sl-captain-row"><input id="slCaptainJ1" placeholder="Pseudo"><select id="slCaptainR1"><option>IGL</option><option>Rusher</option><option>Support</option><option>Sniper</option></select></div></div>
+          <div class="sl-captain-player"><strong>Joueur 2</strong><div class="sl-captain-row"><input id="slCaptainJ2" placeholder="Pseudo"><select id="slCaptainR2"><option>Rusher</option><option>IGL</option><option>Support</option><option>Sniper</option></select></div></div>
+          <div class="sl-captain-player"><strong>Joueur 3</strong><div class="sl-captain-row"><input id="slCaptainJ3" placeholder="Pseudo"><select id="slCaptainR3"><option>Support</option><option>IGL</option><option>Rusher</option><option>Sniper</option></select></div></div>
+        </div>
+        <div class="sl-captain-section">Stratégie</div>
+        <label>Plan de game</label>
+        <textarea id="slCaptainStrat" placeholder="Ex : On drop ensemble, on sécurise le loadout, puis on joue la zone côté safe. Pas de push solo."></textarea>
+        <button class="sl-captain-copy" type="button" onclick="slCaptainCopy()">Copier la strat Discord</button>
+        <div class="sl-captain-preview">Astuce : garde la stratégie courte. Le but est que les 3 joueurs comprennent directement le drop, les rôles et le plan.</div>
+      </div>
+    </div>
+    <div class="sl-captain-footer">© SILENT LEGION — Captain Tool</div>
   </div>
 </div>
 
@@ -245,6 +317,37 @@ document.addEventListener("DOMContentLoaded",function(){
     document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSLControllerTool()});
     window.addEventListener('gamepadconnected',function(){var s=q('slConnectionStatus');if(s){s.textContent='Manette connectée';s.classList.add('connected')}});
     window.addEventListener('gamepaddisconnected',function(){var s=q('slConnectionStatus');if(s){s.textContent='Manette déconnectée';s.classList.remove('connected')}});
+  });
+})();
+</script>
+
+
+<script>
+(function(){
+  function q(id){return document.getElementById(id)}
+  window.openSLCaptainTool=function(){var m=q('slCaptainModal');if(!m)return;m.classList.add('show');m.setAttribute('aria-hidden','false');slCaptainUpdateMapBox()}
+  window.closeSLCaptainTool=function(){var m=q('slCaptainModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true')}
+  window.slCaptainUpdateMapBox=function(){
+    var map=q('slCaptainMap').value;
+    q('slCaptainMapTitle').textContent=map;
+    var text='Choisis le drop principal et donne une consigne simple à ton roster.';
+    if(map==='Rebirth Island')text='Map rapide : restez groupés, prenez l’information vite et évitez les splits inutiles.';
+    if(map==="Fortune's Keep")text='Map avec beaucoup de hauteurs : contrôlez les bâtiments et évitez les rotations tardives.';
+    if(map==="Haven's Hollow")text='Map à contrôler : choisissez une zone forte et gardez un plan de regain.';
+    q('slCaptainMapText').textContent=text;
+  }
+  window.slCaptainCopy=function(){
+    var map=q('slCaptainMap').value, drop=q('slCaptainDrop').value||'-';
+    var j1=q('slCaptainJ1').value||'Joueur 1', j2=q('slCaptainJ2').value||'Joueur 2', j3=q('slCaptainJ3').value||'Joueur 3';
+    var r1=q('slCaptainR1').value, r2=q('slCaptainR2').value, r3=q('slCaptainR3').value;
+    var strat=q('slCaptainStrat').value||'-';
+    var message='📋 SILENT LEGION CAPTAIN TOOL\n\n🗺️ Map : '+map+'\n📍 Drop : '+drop+'\n\n👥 Roster :\n- '+j1+' : '+r1+'\n- '+j2+' : '+r2+'\n- '+j3+' : '+r3+'\n\n🎯 Stratégie :\n'+strat;
+    navigator.clipboard.writeText(message).then(function(){alert('Stratégie copiée pour Discord !')}).catch(function(){prompt('Copie la stratégie :',message)});
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    slCaptainUpdateMapBox();
+    var m=q('slCaptainModal'); if(m)m.addEventListener('click',function(e){if(e.target===m)closeSLCaptainTool()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSLCaptainTool()});
   });
 })();
 </script>
