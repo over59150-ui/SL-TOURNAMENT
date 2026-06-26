@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SILENT LEGION - Classement live</title>
+  <title>SILENT LEGION - Classement live V3</title>
 
   <style>
     :root {
@@ -309,90 +309,6 @@
       background: rgba(255,255,255,0.03);
     }
 
-
-    .chat-box {
-      display: grid;
-      gap: 12px;
-    }
-
-    .chat-messages {
-      max-height: 420px;
-      overflow-y: auto;
-      display: grid;
-      gap: 10px;
-      padding: 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.28);
-    }
-
-    .chat-message {
-      padding: 12px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.055);
-      border: 1px solid rgba(255,255,255,0.07);
-    }
-
-    .chat-message strong {
-      color: var(--blue);
-    }
-
-    .chat-message small {
-      color: var(--muted);
-      display: inline-block;
-      margin-left: 8px;
-      font-size: 11px;
-    }
-
-    .chat-message p {
-      color: var(--text);
-      margin-top: 5px;
-      overflow-wrap: anywhere;
-    }
-
-    .chat-form {
-      display: grid;
-      gap: 10px;
-    }
-
-    .chat-form input,
-    .chat-form textarea {
-      width: 100%;
-      background: #070b12;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--text);
-      padding: 13px 14px;
-      border-radius: 10px;
-      outline: none;
-    }
-
-    .chat-form textarea {
-      min-height: 78px;
-      resize: vertical;
-    }
-
-    .chat-form input:focus,
-    .chat-form textarea:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(0, 170, 255, 0.13);
-    }
-
-    button {
-      border: none;
-      background: var(--blue);
-      color: #02050a;
-      padding: 13px 16px;
-      border-radius: 10px;
-      font-weight: 900;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
-
-    button:hover {
-      background: var(--blue-2);
-    }
-
     @media (max-width: 1000px) {
       .dashboard {
         grid-template-columns: 1fr;
@@ -474,6 +390,19 @@
       </div>
     </section>
 
+    <section class="panel">
+      <h2>Statistiques joueurs</h2>
+      <p class="readonly-note">Classement MVP basé sur les kills individuels des scores validés.</p>
+      <div style="overflow-x:auto;margin-top:16px;">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Joueur</th><th>Équipe</th><th>Kills</th><th>Manches</th><th>Moyenne</th><th>Meilleure manche</th></tr>
+          </thead>
+          <tbody id="playerStatsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
     <section class="dashboard">
       <div class="panel">
         <h2>Barème actuel</h2>
@@ -490,22 +419,6 @@
         <div id="history" class="history"></div>
       </div>
     </section>
-
-
-    <section class="panel">
-      <h2>Tchat en direct</h2>
-      <div class="chat-box">
-        <div id="chatMessages" class="chat-messages">
-          <div class="empty">Chargement du tchat...</div>
-        </div>
-
-        <div class="chat-form">
-          <input id="chatPseudo" maxlength="20" placeholder="Pseudo" />
-          <textarea id="chatText" maxlength="250" placeholder="Message..."></textarea>
-          <button onclick="sendChatMessage()">Envoyer</button>
-        </div>
-      </div>
-    </section>
   </main>
 
   <script>
@@ -513,11 +426,12 @@
 
     let state = {
       lobby: { name: "Silent Legion Custom", code: "", host: "", startTime: "" },
-      settings: { threshold: 50, killPoint: 1, p1: 1.6, p2: 1.4, p3: 1.2, p4: 1.1, p5: 1, p10: 1 },
+      settings: { threshold: 50, killPoint: 1, p1: 15, p2: 12, p3: 10, p5: 8, p10: 5 },
       teams: [],
       results: [],
+      submissions: [],
       championId: null,
-      chat: []
+      playerStats: []
     };
 
     const $ = (id) => document.getElementById(id);
@@ -533,19 +447,6 @@
 
     function setStatus(text) {
       $("syncStatus").textContent = "Statut : " + text;
-    }
-
-
-    async function postApi(action, payload = {}) {
-      const response = await fetch(PUBLIC_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action, payload })
-      });
-
-      const data = await response.json();
-      if (!data.ok) throw new Error(data.error || "Erreur Apps Script.");
-      return data;
     }
 
     async function loadCloud() {
@@ -572,18 +473,20 @@
         settings: { ...state.settings, ...(data.settings || {}) },
         teams: Array.isArray(data.teams) ? data.teams : [],
         results: Array.isArray(data.results) ? data.results : [],
+        submissions: Array.isArray(data.submissions) ? data.submissions : [],
         championId: data.championId || null,
-        chat: Array.isArray(data.chat) ? data.chat : []
+        playerStats: Array.isArray(data.playerStats) ? data.playerStats : []
       };
     }
 
-    function getPlacementMultiplier(place) {
+    function getPlacementPoints(place) {
       const s = state.settings;
-      if (place === 1) return Number(s.p1) || 1.6;
-      if (place === 2) return Number(s.p2) || 1.4;
-      if (place === 3) return Number(s.p3) || 1.2;
-      if (place === 4) return Number(s.p4) || 1.1;
-      return 1;
+      if (place === 1) return Number(s.p1) || 15;
+      if (place === 2) return Number(s.p2) || 12;
+      if (place === 3) return Number(s.p3) || 10;
+      if (place <= 5) return Number(s.p5) || 8;
+      if (place <= 10) return Number(s.p10) || 5;
+      return 0;
     }
 
     function rebuildStats() {
@@ -602,15 +505,18 @@
         const team = state.teams.find(t => t.id === result.teamId);
         if (!team) return;
 
-        const kills = Number(result.kills) || 0;
+        const normalizedPlayerKills = normalizePlayerKills(result.playerKills, team);
+        if (normalizedPlayerKills.length) result.playerKills = normalizedPlayerKills;
+        const kills = normalizedPlayerKills.length ? normalizedPlayerKills.reduce((sum, p) => sum + Number(p.kills || 0), 0) : Number(result.kills) || 0;
+        result.kills = kills;
         const place = Number(result.placement) || 99;
-        const basePoints = kills * Number(state.settings.killPoint || 1);
-        const multiplier = getPlacementMultiplier(place);
-        const total = Math.round(basePoints * multiplier * 10) / 10;
+        const killPoints = kills * Number(state.settings.killPoint || 1);
+        const placementPoints = getPlacementPoints(place);
+        const total = killPoints + placementPoints;
         const wasEligible = team.points >= Number(state.settings.threshold);
 
-        result.killPoints = basePoints;
-        result.placementPoints = multiplier;
+        result.killPoints = killPoints;
+        result.placementPoints = placementPoints;
         result.total = total;
         result.beforePoints = team.points;
         result.wasEligible = wasEligible;
@@ -632,6 +538,115 @@
       });
     }
 
+    function normalizePlayerKills(playerKills, team) {
+      const names = Array.isArray(team && team.players) ? team.players : [];
+      const source = Array.isArray(playerKills) ? playerKills : [];
+      if (!source.length) return [];
+      return [0, 1, 2].map((index) => {
+        const item = source[index] || {};
+        return {
+          playerIndex: index,
+          playerName: String(item.playerName || names[index] || `Joueur ${index + 1}`).trim(),
+          kills: Math.max(0, Number(item.kills || 0))
+        };
+      });
+    }
+
+    function formatPlayerKills(playerKills, team) {
+      const list = normalizePlayerKills(playerKills, team);
+      if (!list.length) return "";
+      return list.map(p => `${escapeHtml(p.playerName)} : ${escapeHtml(p.kills)} kill(s)`).join(" • ");
+    }
+
+    function getPlayerKillsForResult(result, team) {
+      let list = normalizePlayerKills(result.playerKills, team);
+      if (list.length) return list;
+
+      const linkedSubmission = (state.submissions || []).find(s =>
+        String(s.id || "") === String(result.submissionId || "") ||
+        (String(s.teamId || "") === String(result.teamId || "") &&
+         Number(s.round || s.game || 0) === Number(result.round || 0) &&
+         (s.status || "pending") === "approved")
+      );
+
+      if (linkedSubmission) {
+        list = normalizePlayerKills(linkedSubmission.playerKills, team);
+        if (list.length) {
+          result.playerKills = list;
+          result.kills = list.reduce((sum, p) => sum + Number(p.kills || 0), 0);
+        }
+      }
+
+      return list;
+    }
+
+    function getPlayerKillStats() {
+      if (Array.isArray(state.playerStats) && state.playerStats.length) {
+        return [...state.playerStats].sort((a, b) => Number(b.kills || 0) - Number(a.kills || 0) || Number(b.best || 0) - Number(a.best || 0) || String(a.playerName || "").localeCompare(String(b.playerName || "")));
+      }
+      const map = new Map();
+      const usedSubmissionIds = new Set();
+
+      function addList(list, teamName, teamId, sourceId) {
+        normalizePlayerKills(list, { players: (state.teams.find(t => String(t.id) === String(teamId)) || {}).players || [] }).forEach(p => {
+          const key = `${teamId || teamName}::${p.playerIndex}::${p.playerName}`;
+          if (!map.has(key)) {
+            map.set(key, { playerName: p.playerName, teamName, kills: 0, rounds: 0, best: 0, sources: new Set() });
+          }
+          const stat = map.get(key);
+          const uniqueSource = `${sourceId || "source"}::${p.playerIndex}`;
+          if (stat.sources.has(uniqueSource)) return;
+          stat.sources.add(uniqueSource);
+          const kills = Number(p.kills || 0);
+          stat.kills += kills;
+          stat.rounds += 1;
+          stat.best = Math.max(stat.best, kills);
+        });
+      }
+
+      (state.results || []).forEach(result => {
+        const team = state.teams.find(t => String(t.id) === String(result.teamId));
+        const teamName = team ? team.name : result.teamName || "Équipe";
+        const list = getPlayerKillsForResult(result, team);
+        if (list.length) {
+          if (result.submissionId) usedSubmissionIds.add(String(result.submissionId));
+          addList(list, teamName, result.teamId || (team && team.id), `result:${result.id || result.order || result.round}`);
+        }
+      });
+
+      (state.submissions || []).forEach(sub => {
+        if ((sub.status || "pending") !== "approved") return;
+        if (usedSubmissionIds.has(String(sub.id || ""))) return;
+        const team = state.teams.find(t => String(t.id) === String(sub.teamId) || String(t.code || "").toUpperCase() === String(sub.teamCode || "").toUpperCase());
+        const teamName = team ? team.name : sub.teamName || "Équipe";
+        const list = normalizePlayerKills(sub.playerKills, team);
+        if (list.length) addList(list, teamName, sub.teamId || (team && team.id) || sub.teamCode, `submission:${sub.id || sub.createdAt || sub.round}`);
+      });
+
+      return [...map.values()].map(s => ({ ...s, sources: undefined })).sort((a, b) => b.kills - a.kills || b.best - a.best || a.playerName.localeCompare(b.playerName));
+    }
+
+    function renderPlayerStats() {
+      const body = $("playerStatsBody");
+      if (!body) return;
+      const stats = getPlayerKillStats();
+      if (!stats.length) {
+        body.innerHTML = `<tr><td colspan="7"><div class="empty">Aucune statistique joueur pour le moment.</div></td></tr>`;
+        return;
+      }
+      body.innerHTML = stats.map((p, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td><strong>${escapeHtml(p.playerName)}</strong></td>
+          <td>${escapeHtml(p.teamName)}</td>
+          <td><strong>${p.kills}</strong></td>
+          <td>${p.rounds}</td>
+          <td>${p.rounds ? (p.kills / p.rounds).toFixed(2) : "0.00"}</td>
+          <td>${p.best}</td>
+        </tr>
+      `).join("");
+    }
+
     function renderStats() {
       const mpCount = state.teams.filter(t => t.points >= Number(state.settings.threshold)).length;
 
@@ -643,12 +658,13 @@
 
     function renderScoring() {
       $("scoringTable").innerHTML = `
-        <tr><td>Kill</td><td>${state.settings.killPoint} point(s) de base</td></tr>
-        <tr><td>Top 1</td><td>x${state.settings.p1}</td></tr>
-        <tr><td>Top 2</td><td>x${state.settings.p2}</td></tr>
-        <tr><td>Top 3</td><td>x${state.settings.p3}</td></tr>
-        <tr><td>Top 4</td><td>x${state.settings.p4}</td></tr>
-        <tr><td>Top 5+</td><td>x1</td></tr>
+        <tr><td>Kill</td><td>${state.settings.killPoint} point(s)</td></tr>
+        <tr><td>Top 1</td><td>${state.settings.p1} points</td></tr>
+        <tr><td>Top 2</td><td>${state.settings.p2} points</td></tr>
+        <tr><td>Top 3</td><td>${state.settings.p3} points</td></tr>
+        <tr><td>Top 4-5</td><td>${state.settings.p5} points</td></tr>
+        <tr><td>Top 6-10</td><td>${state.settings.p10} points</td></tr>
+        <tr><td>Top 11+</td><td>0 point</td></tr>
       `;
     }
 
@@ -724,8 +740,9 @@
             <strong>Manche ${result.round} — ${escapeHtml(teamName)}${championText}</strong>
             <p>
               Placement : Top ${result.placement} • Kills : ${result.kills} •
-              Points : ${result.total} (${result.killPoints} pts kills × x${result.placementPoints})
+              Points : ${result.total} (${result.killPoints} kills + ${result.placementPoints} placement)
             </p>
+            ${formatPlayerKills(result.playerKills, team) ? `<p>Joueurs : ${formatPlayerKills(result.playerKills, team)}</p>` : ""}
             <p>
               Avant : ${result.beforePoints} pts • Après : ${result.afterPoints} pts • ${mpText}
             </p>
@@ -756,55 +773,14 @@
       box.classList.add("show");
     }
 
-
-
-    function renderChat() {
-      const box = $("chatMessages");
-      if (!box) return;
-
-      const messages = [...(state.chat || [])].slice(-80);
-
-      if (messages.length === 0) {
-        box.innerHTML = `<div class="empty">Aucun message pour le moment.</div>`;
-        return;
-      }
-
-      box.innerHTML = messages.map(message => `
-        <div class="chat-message">
-          <strong>${escapeHtml(message.pseudo || message.author || message.name || "Viewer")}</strong>
-          <small>${escapeHtml(message.createdAt || "")}</small>
-          <p>${escapeHtml(message.text || "")}</p>
-        </div>
-      `).join("");
-
-      box.scrollTop = box.scrollHeight;
-    }
-
-    async function sendChatMessage() {
-      try {
-        const pseudo = ($("chatPseudo").value || "Viewer").trim().slice(0, 20);
-        const text = ($("chatText").value || "").trim().slice(0, 250);
-
-        if (!text) return;
-
-        const data = await postApi("sendMessage", { pseudo, text });
-        if (data.state) state = normalizeState(data.state);
-
-        $("chatText").value = "";
-        render();
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
     function render() {
       rebuildStats();
       renderStats();
       renderScoring();
       renderTeams();
+      renderPlayerStats();
       renderHistory();
       renderChampion();
-      renderChat();
     }
 
     render();
