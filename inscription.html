@@ -20,10 +20,49 @@ main{width:min(1000px,94%);margin:30px auto 70px;display:grid;gap:22px}.panel{ba
 
 .refresh-info{margin-top:10px;color:var(--muted);font-size:13px}
 .refresh-info strong{color:var(--blue)}
+
+
+/* === SL Controller Diagnostic intégré === */
+.sl-controller-launcher{
+  position:fixed;
+  left:7%;
+  top:52%;
+  transform:translateY(-50%);
+  z-index:20;
+  width:260px;
+  padding:18px;
+  border-radius:20px;
+  border:1px solid rgba(0,170,255,.45);
+  background:linear-gradient(145deg,rgba(0,170,255,.16),rgba(8,12,18,.94));
+  color:var(--text);
+  box-shadow:0 0 35px rgba(0,170,255,.16);
+  text-align:left;
+  cursor:pointer;
+}
+.sl-controller-launcher:hover{transform:translateY(calc(-50% - 2px));background:linear-gradient(145deg,rgba(0,170,255,.24),rgba(8,12,18,.96))}
+.sl-controller-launcher small{display:block;color:var(--blue);text-transform:uppercase;letter-spacing:2px;font-weight:900;font-size:10px;margin-bottom:7px}
+.sl-controller-launcher strong{display:block;font-size:20px;text-transform:uppercase;line-height:1.05}
+.sl-controller-launcher span{display:block;color:var(--muted);font-size:12px;margin-top:8px;line-height:1.35}
+.sl-controller-modal{position:fixed;inset:0;z-index:1000;display:none;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);padding:24px;overflow:auto}
+.sl-controller-modal.show{display:block}
+.sl-controller-app{width:min(1200px,100%);margin:auto;background:linear-gradient(145deg,rgba(17,23,34,.98),rgba(5,7,12,.98));border:1px solid rgba(0,170,255,.35);border-radius:22px;padding:28px;box-shadow:0 0 50px rgba(0,170,255,.18)}
+.sl-controller-head{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center;margin-bottom:24px}.sl-controller-head small{color:var(--blue);text-transform:uppercase;letter-spacing:4px;font-weight:bold;font-size:11px}.sl-controller-head h1{font-size:clamp(28px,5vw,48px);text-transform:uppercase;line-height:1}.sl-controller-head h1 span{color:var(--blue);text-shadow:0 0 18px rgba(0,170,255,.8)}
+.sl-controller-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.sl-controller-status{padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.15);color:var(--muted);font-weight:bold;text-transform:uppercase;font-size:12px;max-width:420px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.sl-controller-status.connected{color:var(--success);border-color:rgba(51,255,153,.45);background:rgba(51,255,153,.08)}
+.sl-controller-close{background:transparent!important;border:1px solid rgba(255,255,255,.18)!important;color:var(--text)!important;margin-top:0!important}.sl-controller-intro{color:var(--muted);margin-bottom:25px;line-height:1.6}.sl-controller-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}.sl-controller-panel{background:rgba(7,11,18,.75);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:22px}.sl-controller-panel h2{font-size:20px;text-transform:uppercase;margin-bottom:14px;border-left:4px solid var(--blue);padding-left:12px}.sl-controller-help{color:var(--muted);font-size:14px;margin-bottom:18px;line-height:1.5}.sl-stick-zone{width:280px;height:280px;max-width:100%;aspect-ratio:1/1;margin:20px auto;border-radius:50%;border:2px solid rgba(0,170,255,.55);position:relative;background:radial-gradient(circle,rgba(0,170,255,.14),transparent 60%),#05070c;box-shadow:inset 0 0 30px rgba(0,170,255,.12);overflow:hidden}.sl-axis-x,.sl-axis-y{position:absolute;background:rgba(255,255,255,.12)}.sl-axis-x{width:100%;height:1px;top:50%;left:0}.sl-axis-y{width:1px;height:100%;top:0;left:50%}.sl-deadzone-circle{position:absolute;border:1px dashed rgba(255,255,255,.3);border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}.sl-dot{width:22px;height:22px;border-radius:50%;background:var(--blue);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 18px rgba(0,170,255,1)}.sl-dot.right{background:var(--success);box-shadow:0 0 18px rgba(51,255,153,1)}.sl-values{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.sl-value{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:14px;border-radius:12px}.sl-value small{color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-size:11px;font-weight:bold}.sl-value strong{display:block;font-size:22px;color:var(--blue);margin-top:5px}.sl-controller-panel input[type=range]{width:100%;accent-color:var(--blue)}.sl-result-box{margin-top:18px;padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-weight:bold;line-height:1.4}.sl-ok{color:var(--success)}.sl-bad{color:var(--danger)}.sl-neutral{color:var(--muted)}.sl-controller-footer{margin-top:25px;color:var(--muted);font-size:13px;text-align:center}
+@media(max-width:1350px){.sl-controller-launcher{position:static;transform:none;width:min(1000px,94%);margin:22px auto 0}.sl-controller-launcher:hover{transform:translateY(-2px)}}
+@media(max-width:900px){.sl-controller-grid{grid-template-columns:1fr}.sl-stick-zone{width:240px;height:240px}.sl-controller-modal{padding:14px}.sl-controller-app{padding:20px}}
+@media(max-width:550px){.sl-values{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
 <header><div class="header-row"><div class="brand"><small>Inscription tournoi</small><h1>Silent <span>Legion</span></h1></div><div class="top-actions"><a class="linkbtn" href="classement.html">Classement</a><div class="badge">Warzone • Match Point</div></div></div></header>
+<button class="sl-controller-launcher" type="button" onclick="openSLControllerTool()">
+  <small>Outil gratuit</small>
+  <strong>Test manette</strong>
+  <span>Diagnostic drift joystick + deadzones avant le tournoi</span>
+</button>
+
 <main>
 <section class="panel">
 <h2>Inscrire votre équipe</h2>
@@ -60,6 +99,28 @@ main{width:min(1000px,94%);margin:30px auto 70px;display:grid;gap:22px}.panel{ba
 </div>
 </section>
 </main>
+
+<div id="slControllerModal" class="sl-controller-modal" aria-hidden="true">
+  <div class="sl-controller-app">
+    <div class="sl-controller-head">
+      <div>
+        <small>Controller Diagnostic Tool</small>
+        <h1>Silent <span>Legion</span></h1>
+      </div>
+      <div class="sl-controller-tools">
+        <div id="slConnectionStatus" class="sl-controller-status">Manette non détectée</div>
+        <button class="sl-controller-close" type="button" onclick="closeSLControllerTool()">Fermer</button>
+      </div>
+    </div>
+    <p class="sl-controller-intro">Branche ta manette, appuie sur un bouton, puis bouge les deux joysticks. Cet outil lit les axes de ta manette pour tester le drift et régler les deadzones.</p>
+    <div class="sl-controller-grid">
+      <section class="sl-controller-panel"><h2>Joystick gauche</h2><p class="sl-controller-help">Généralement utilisé pour les déplacements. Axes lus : 0 et 1.</p><div class="sl-stick-zone"><div class="sl-axis-x"></div><div class="sl-axis-y"></div><div class="sl-deadzone-circle" id="slLeftDeadzoneCircle"></div><div class="sl-dot" id="slLeftDot"></div></div><label>Deadzone gauche : <span id="slLeftDeadzoneValue">0.08</span></label><input id="slLeftDeadzone" type="range" min="0" max="0.30" step="0.01" value="0.08"><button type="button" onclick="slCalibrateLeft()">Calibrer joystick gauche</button><div class="sl-values"><div class="sl-value"><small>Axe X</small><strong id="slLeftXValue">0.000</strong></div><div class="sl-value"><small>Axe Y</small><strong id="slLeftYValue">0.000</strong></div><div class="sl-value"><small>Intensité</small><strong id="slLeftMagnitudeValue">0.000</strong></div></div><div id="slLeftAnalysis" class="sl-result-box sl-neutral">En attente de la manette...</div></section>
+      <section class="sl-controller-panel"><h2>Joystick droit</h2><p class="sl-controller-help">Généralement utilisé pour la caméra / visée. Axes lus : 2 et 3.</p><div class="sl-stick-zone"><div class="sl-axis-x"></div><div class="sl-axis-y"></div><div class="sl-deadzone-circle" id="slRightDeadzoneCircle"></div><div class="sl-dot right" id="slRightDot"></div></div><label>Deadzone droite : <span id="slRightDeadzoneValue">0.08</span></label><input id="slRightDeadzone" type="range" min="0" max="0.30" step="0.01" value="0.08"><button type="button" onclick="slCalibrateRight()">Calibrer joystick droit</button><div class="sl-values"><div class="sl-value"><small>Axe X</small><strong id="slRightXValue">0.000</strong></div><div class="sl-value"><small>Axe Y</small><strong id="slRightYValue">0.000</strong></div><div class="sl-value"><small>Intensité</small><strong id="slRightMagnitudeValue">0.000</strong></div></div><div id="slRightAnalysis" class="sl-result-box sl-neutral">En attente de la manette...</div></section>
+    </div>
+    <div class="sl-controller-footer">Cette page lit seulement les mouvements de la manette. Elle ne contrôle pas la manette et n’envoie aucun input au jeu.</div>
+  </div>
+</div>
+
 <script>
 var API_URL = "https://script.google.com/macros/s/AKfycbw3D58ylYPGk-ZlzP55YcxKmmdtCw0_2-m-EGWpRh8KWHviv4Ewq013fyXSf2Alkgt4qA/exec";
 var MAX_TEAMS = 15;
@@ -148,5 +209,45 @@ document.addEventListener("DOMContentLoaded",function(){
 });
 
 </script>
+
+<script>
+(function(){
+  var modal, running=false, raf=0;
+  var leftCenterOffsetX=0,leftCenterOffsetY=0,rightCenterOffsetX=0,rightCenterOffsetY=0;
+  var lastLeftRawX=0,lastLeftRawY=0,lastRightRawX=0,lastRightRawY=0;
+  function q(id){return document.getElementById(id)}
+  function getGamepad(){var pads=navigator.getGamepads?navigator.getGamepads():[];return Array.from(pads).find(function(p){return p})}
+  function updateDeadzoneCircle(input,circle,label){if(!input||!circle||!label)return;var dz=Number(input.value);var zoneSize=280*dz;circle.style.width=zoneSize+'px';circle.style.height=zoneSize+'px';label.textContent=dz.toFixed(2)}
+  function updateStick(dot,x,y){if(!dot)return;var maxMove=120;dot.style.left='calc(50% + '+(Math.max(-1,Math.min(1,x))*maxMove)+'px)';dot.style.top='calc(50% + '+(Math.max(-1,Math.min(1,y))*maxMove)+'px)'}
+  function analyze(mag,dz,box,name){if(!box)return;if(mag<dz){box.textContent=name+' OK : le joystick est dans la deadzone. Aucun drift important détecté.';box.className='sl-result-box sl-ok'}else if(mag<dz+.05){box.textContent=name+' : léger mouvement détecté. Augmente un peu la deadzone si ça bouge tout seul en jeu.';box.className='sl-result-box sl-neutral'}else{box.textContent=name+' : mouvement important détecté. Le joystick est incliné ou il y a un drift fort.';box.className='sl-result-box sl-bad'}}
+  function update(){
+    if(!running)return;
+    var status=q('slConnectionStatus'), pad=getGamepad();
+    if(!pad){if(status){status.textContent='Manette non détectée';status.classList.remove('connected')} ['slLeftAnalysis','slRightAnalysis'].forEach(function(id){var b=q(id);if(b){b.textContent='Appuie sur un bouton de ta manette pour l’activer.';b.className='sl-result-box sl-neutral'}});raf=requestAnimationFrame(update);return}
+    if(status){status.textContent=pad.id;status.classList.add('connected')}
+    lastLeftRawX=pad.axes[0]||0;lastLeftRawY=pad.axes[1]||0;lastRightRawX=pad.axes[2]||0;lastRightRawY=pad.axes[3]||0;
+    var lx=lastLeftRawX-leftCenterOffsetX, ly=lastLeftRawY-leftCenterOffsetY, rx=lastRightRawX-rightCenterOffsetX, ry=lastRightRawY-rightCenterOffsetY;
+    var lm=Math.sqrt(lx*lx+ly*ly), rm=Math.sqrt(rx*rx+ry*ry), ldz=Number(q('slLeftDeadzone').value), rdz=Number(q('slRightDeadzone').value);
+    q('slLeftXValue').textContent=lx.toFixed(3);q('slLeftYValue').textContent=ly.toFixed(3);q('slLeftMagnitudeValue').textContent=lm.toFixed(3);q('slRightXValue').textContent=rx.toFixed(3);q('slRightYValue').textContent=ry.toFixed(3);q('slRightMagnitudeValue').textContent=rm.toFixed(3);
+    updateStick(q('slLeftDot'),lx,ly);updateStick(q('slRightDot'),rx,ry);analyze(lm,ldz,q('slLeftAnalysis'),'Joystick gauche');analyze(rm,rdz,q('slRightAnalysis'),'Joystick droit');
+    raf=requestAnimationFrame(update)
+  }
+  window.openSLControllerTool=function(){modal=q('slControllerModal');if(!modal)return;modal.classList.add('show');modal.setAttribute('aria-hidden','false');running=true;update()}
+  window.closeSLControllerTool=function(){modal=q('slControllerModal');if(!modal)return;modal.classList.remove('show');modal.setAttribute('aria-hidden','true');running=false;if(raf)cancelAnimationFrame(raf)}
+  window.slCalibrateLeft=function(){leftCenterOffsetX=lastLeftRawX;leftCenterOffsetY=lastLeftRawY;alert('Joystick gauche calibré avec sa position actuelle.')}
+  window.slCalibrateRight=function(){rightCenterOffsetX=lastRightRawX;rightCenterOffsetY=lastRightRawY;alert('Joystick droit calibré avec sa position actuelle.')}
+  document.addEventListener('DOMContentLoaded',function(){
+    var l=q('slLeftDeadzone'), r=q('slRightDeadzone');
+    updateDeadzoneCircle(l,q('slLeftDeadzoneCircle'),q('slLeftDeadzoneValue')); updateDeadzoneCircle(r,q('slRightDeadzoneCircle'),q('slRightDeadzoneValue'));
+    if(l)l.addEventListener('input',function(){updateDeadzoneCircle(l,q('slLeftDeadzoneCircle'),q('slLeftDeadzoneValue'))});
+    if(r)r.addEventListener('input',function(){updateDeadzoneCircle(r,q('slRightDeadzoneCircle'),q('slRightDeadzoneValue'))});
+    var m=q('slControllerModal'); if(m)m.addEventListener('click',function(e){if(e.target===m)closeSLControllerTool()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSLControllerTool()});
+    window.addEventListener('gamepadconnected',function(){var s=q('slConnectionStatus');if(s){s.textContent='Manette connectée';s.classList.add('connected')}});
+    window.addEventListener('gamepaddisconnected',function(){var s=q('slConnectionStatus');if(s){s.textContent='Manette déconnectée';s.classList.remove('connected')}});
+  });
+})();
+</script>
+
 </body>
 </html>
