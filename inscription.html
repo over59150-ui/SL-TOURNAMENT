@@ -17,6 +17,9 @@ main{width:min(1000px,94%);margin:30px auto 70px;display:grid;gap:22px}.panel{ba
 .counter{margin-top:18px;padding:18px;border-radius:16px;background:linear-gradient(145deg,rgba(0,170,255,.12),rgba(51,255,153,.05));border:1px solid var(--border)}.counter strong{color:var(--blue);font-size:34px;display:block;margin-top:4px}.progress{height:10px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin-top:12px}.progress i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--success));transition:.3s}
 .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;font-weight:bold}input,textarea{width:100%;background:#070b12;border:1px solid rgba(255,255,255,.1);color:var(--text);padding:13px 14px;border-radius:10px;outline:none}input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,170,255,.13)}textarea{min-height:100px;resize:vertical}button{border:none;background:var(--blue);color:#02050a;padding:14px 18px;border-radius:10px;font-weight:900;cursor:pointer;text-transform:uppercase;letter-spacing:.8px}button:hover{background:var(--blue2)}button:disabled{opacity:.5;cursor:not-allowed}.secondary{background:transparent;border:1px solid rgba(255,255,255,.18);color:var(--text)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.status{margin-top:18px;padding:14px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted);white-space:pre-wrap}.ok{color:var(--success);border-color:rgba(51,255,153,.35);background:rgba(51,255,153,.08)}.error{color:#ffb3b3;border-color:rgba(255,77,77,.35);background:rgba(255,77,77,.08)}.warning{color:#ffe2a0;border-color:rgba(255,209,102,.35);background:rgba(255,209,102,.08)}.codebox{font-size:28px;color:var(--success);font-weight:900;letter-spacing:2px;font-family:monospace}.submission{padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.25);margin-top:10px}.submission small{color:var(--muted)}.spinner{display:inline-block;width:15px;height:15px;margin-right:8px;border:2px solid rgba(255,255,255,.25);border-top-color:var(--blue);border-radius:50%;vertical-align:-2px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:760px){.grid-2,.grid-3,.rules{grid-template-columns:1fr}}
+
+.refresh-info{margin-top:10px;color:var(--muted);font-size:13px}
+.refresh-info strong{color:var(--blue)}
 </style>
 </head>
 <body>
@@ -35,6 +38,7 @@ main{width:min(1000px,94%);margin:30px auto 70px;display:grid;gap:22px}.panel{ba
 <div style="margin-top:14px"><label>Commentaire</label><textarea id="note" placeholder="Optionnel : disponibilité, remplaçant, info utile..."></textarea></div>
 <div class="actions"><button id="submitBtn" type="submit">Valider l'inscription</button><button class="secondary" type="button" onclick="loadCount()">Actualiser</button></div>
 <div id="status" class="status"><span class="spinner"></span>Actualisation des places disponibles...</div>
+<div id="refreshInfo" class="refresh-info">Actualisation automatique dans <strong id="refreshCountdown">60</strong>s.</div>
 </form>
 </section>
 <section class="panel">
@@ -62,6 +66,9 @@ var MAX_TEAMS = 15;
 var currentTeams = 0;
 var state = { lobby: { currentRound: 1 }, teams: [], submissions: [] };
 var currentTeam = null;
+var REFRESH_SECONDS = 60;
+var refreshLeft = REFRESH_SECONDS;
+var autoRefreshPaused = false;
 function el(id){return document.getElementById(id)}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8).toUpperCase()}
 function escapeHtml(v){return String(v||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
@@ -94,8 +101,8 @@ async function api(action,payload,method){
     throw e;
   }finally{clearTimeout(timer)}
 }
-function updateCounter(count){currentTeams=count;el("teamCounter").textContent=count+" / "+MAX_TEAMS;el("progressBar").style.width=Math.min(100,(count/MAX_TEAMS)*100)+"%";if(count>=MAX_TEAMS){el("submitBtn").disabled=true;setStatus("status","Les inscriptions sont complètes. Limite atteinte : "+MAX_TEAMS+" équipes.","warning")}else{el("submitBtn").disabled=false;setStatus("status","✅ Places disponibles : "+(MAX_TEAMS-count)+".","ok")}}
-async function loadCount(){try{setStatus("status",'<span class="spinner"></span>Actualisation des places disponibles...',"");var data=await api("get",{},"GET");state=normalizeIncomingState(data.state,state);var teams=Array.isArray(state.teams)?state.teams:[];updateCounter(teams.length)}catch(error){setStatus("status","Impossible de charger les places. Nouvelle tentative automatique dans 5 secondes. Détail : "+error.message,"error")}}
+function updateCounter(count, options){options=options||{};currentTeams=count;el("teamCounter").textContent=count+" / "+MAX_TEAMS;el("progressBar").style.width=Math.min(100,(count/MAX_TEAMS)*100)+"%";if(count>=MAX_TEAMS){el("submitBtn").disabled=true;if(!options.silent)setStatus("status","Les inscriptions sont complètes. Limite atteinte : "+MAX_TEAMS+" équipes.","warning")}else{el("submitBtn").disabled=false;if(!options.silent)setStatus("status","✅ Places disponibles : "+(MAX_TEAMS-count)+".","ok")}}
+async function loadCount(options){options=options||{};try{if(!options.silent)setStatus("status",'<span class="spinner"></span>Actualisation des places disponibles...',"");var data=await api("get",{},"GET");state=normalizeIncomingState(data.state,state);var teams=Array.isArray(state.teams)?state.teams:[];updateCounter(teams.length,{silent:options.silent});refreshLeft=REFRESH_SECONDS;updateRefreshCountdown()}catch(error){if(!options.silent)setStatus("status","Impossible de charger les places. Nouvelle tentative automatique dans 60 secondes. Détail : "+error.message,"error")}}
 el("registerForm").addEventListener("submit",async function(event){event.preventDefault();if(currentTeams>=MAX_TEAMS){setStatus("status","Les inscriptions sont complètes.","warning");return}var teamName=el("teamName").value.trim();var captain=el("captainName").value.trim();var players=[el("player1").value.trim(),el("player2").value.trim(),el("player3").value.trim()].filter(Boolean);if(!teamName||!captain||players.length!==3){setStatus("status","Merci de remplir le nom de l'équipe, le capitaine et les 3 joueurs.","error");return}el("submitBtn").disabled=true;setStatus("status","Inscription en cours...");try{var data=await api("registerTeam",{id:uid(),name:teamName,captain:captain,players:players,contact:el("contact").value.trim(),note:el("note").value.trim(),registeredAt:new Date().toLocaleString("fr-FR")},"POST");state=normalizeIncomingState(data.state,state);
 var createdTeam = (state.teams||[]).find(function(t){
   return String(t.id||"") === String(data.id||"") ||
@@ -104,12 +111,42 @@ var createdTeam = (state.teams||[]).find(function(t){
 var generatedCode = data.code || (createdTeam && createdTeam.code) || "Code non reçu";
 el("registerForm").reset();
 updateCounter((state.teams||[]).length);
-setStatus("status",`Inscription validée !<br>Code privé équipe : <span class="codebox">${escapeHtml(generatedCode)}</span><br>Garde ce code pour envoyer tes scores et screens.`,"ok")}catch(error){setStatus("status","Erreur : "+error.message,"error")}finally{el("submitBtn").disabled=false}});
+autoRefreshPaused=true;updateRefreshCountdown();setStatus("status",`Inscription validée !<br>Code privé équipe : <span class="codebox" id="generatedTeamCode">${escapeHtml(generatedCode)}</span><br>Garde ce code pour envoyer tes scores et screens.<br><button type="button" style="margin-top:12px;margin-right:10px" onclick="copyGeneratedCode()">Copier le code</button><button type="button" class="secondary" style="margin-top:12px" onclick="resumeAutoRefresh()">Relancer l’actualisation</button>`,"ok")}catch(error){setStatus("status","Erreur : "+error.message,"error")}finally{el("submitBtn").disabled=false}});
 async function loginTeam(){try{var data=await api("get",{},"GET");state=normalizeIncomingState(data.state,state);var code=el("teamCode").value.trim().toUpperCase();currentTeam=(state.teams||[]).find(function(t){return String(t.code||"").toUpperCase()===code});if(!currentTeam)throw new Error("Code équipe invalide.");el("teamSpace").style.display="block";el("spaceTeamName").textContent=currentTeam.name;syncRoundInput();renderPlayerKillInputs();renderMySubmissions()}catch(e){alert(e.message)}}
 function fileToBase64(file){return new Promise(function(resolve,reject){var r=new FileReader();r.onload=function(){resolve(r.result)};r.onerror=reject;r.readAsDataURL(file)})}
 el("scoreForm").addEventListener("submit",async function(e){e.preventDefault();var btn=el("scoreBtn");var sentOk=false;btn.disabled=true;try{if(!currentTeam)throw new Error("Connecte-toi à ton espace équipe.");var top=el("screenshotTop").files[0];var board=el("screenshotScoreboard").files[0];if(!top)throw new Error("Ajoute le screen Top / placement.");if(!board)throw new Error("Ajoute le screen Scoreboard / kills.");if(top.size>5*1024*1024||board.size>5*1024*1024)throw new Error("Chaque image doit faire moins de 5 Mo.");var selectedRound=Number(el("roundNumber").value);var currentRound=getCurrentRound();if(selectedRound!==currentRound){var ok=confirm("Vous avez envoyé pour la manche "+selectedRound+", nous sommes actuellement en manche "+currentRound+". Voulez-vous envoyer quand même ?");if(!ok){setStatus("scoreStatus","Envoi annulé. Corrige la manche avant d’envoyer.","warning");return}}setStatus("scoreStatus","Envoi en cours...");var data=await api("submitScreen",{id:uid(),teamId:currentTeam.id,teamCode:currentTeam.code,teamName:currentTeam.name,round:selectedRound,playerKills:getPlayerKills(),kills:updateTeamKillsTotal(),placement:Number(el("placement").value),note:el("scoreNote").value.trim(),fileDataTop:await fileToBase64(top),fileNameTop:top.name,fileDataScoreboard:await fileToBase64(board),fileNameScoreboard:board.name},"POST");state=normalizeIncomingState(data.state,state);el("scoreForm").reset();syncRoundInput();renderPlayerKillInputs();el("placement").value=1;sentOk=true;btn.style.display="none";setStatus("scoreStatus","Score envoyé. En attente de validation admin.<br><br><strong>Merci d’actualiser la page avant d’envoyer une nouvelle manche.</strong><br><button type=\"button\" style=\"margin-top:12px;margin-right:10px\" onclick=\"location.reload()\">Actualiser la page</button><button type=\"button\" class=\"secondary\" style=\"margin-top:12px\" onclick=\"window.location.href='classement.html'\">Voir le classement</button>","ok");renderMySubmissions()}catch(err){setStatus("scoreStatus","Erreur : "+err.message,"error")}finally{if(!sentOk){btn.disabled=false}else{btn.disabled=true}}});
 function renderMySubmissions(){if(!currentTeam)return;var list=(state.submissions||[]).filter(function(s){return s.teamId===currentTeam.id||String(s.teamCode||"").toUpperCase()===String(currentTeam.code||"").toUpperCase()}).sort(function(a,b){return String(b.createdAt||"").localeCompare(String(a.createdAt||""))});el("mySubmissions").innerHTML=list.length?`<h2 style="margin-top:20px">Mes envois</h2>`+list.map(function(s){var st=s.status==="approved"?"Validé":s.status==="rejected"?"Refusé":"En attente";return `<div class="submission"><strong>Manche ${escapeHtml(s.round)}</strong> • ${escapeHtml(s.kills)} kills • Top ${escapeHtml(s.placement)}<br><small>Statut : ${st} • ${escapeHtml(s.createdAt)}</small></div>`}).join(""):""}
-document.addEventListener("DOMContentLoaded",function(){loadCount();setInterval(loadCount,5000)});
+
+function updateRefreshCountdown(){
+  var box=el("refreshInfo"), c=el("refreshCountdown");
+  if(!box||!c)return;
+  if(autoRefreshPaused){
+    box.innerHTML='Actualisation automatique <strong>en pause</strong> pour laisser le temps de copier le code.';
+  }else{
+    c.textContent=refreshLeft;
+    box.innerHTML='Actualisation automatique dans <strong id="refreshCountdown">'+refreshLeft+'</strong>s.';
+  }
+}
+function resumeAutoRefresh(){autoRefreshPaused=false;refreshLeft=REFRESH_SECONDS;updateRefreshCountdown();loadCount({silent:false})}
+function copyGeneratedCode(){
+  var codeEl=el("generatedTeamCode");
+  var code=codeEl?codeEl.textContent.trim():"";
+  if(!code)return;
+  navigator.clipboard.writeText(code).then(function(){alert("Code copié : "+code)}).catch(function(){prompt("Copie le code :",code)});
+}
+document.addEventListener("DOMContentLoaded",function(){
+  loadCount();
+  setInterval(function(){
+    if(autoRefreshPaused){updateRefreshCountdown();return}
+    refreshLeft--;
+    if(refreshLeft<=0){
+      loadCount({silent:true});
+    }else{
+      updateRefreshCountdown();
+    }
+  },1000);
+});
+
 </script>
 </body>
 </html>
