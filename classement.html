@@ -451,9 +451,23 @@
 
     async function loadCloud() {
       try {
-        const url = PUBLIC_API_URL + "?action=get&t=" + Date.now();
-        const response = await fetch(url);
-        const data = await response.json();
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 15000);
+        let data;
+        try {
+          const url = PUBLIC_API_URL + "?action=get&t=" + Date.now();
+          const response = await fetch(url, { signal: controller.signal });
+          const text = await response.text();
+          try { data = JSON.parse(text); }
+          catch { throw new Error("Réponse Google Script invalide : " + text.slice(0, 160)); }
+        } finally {
+          clearTimeout(timer);
+        }
+
+        if (typeof data.state === "string") {
+          try { data.state = JSON.parse(data.state); }
+          catch { data.state = {}; }
+        }
 
         if (!data.ok) {
           throw new Error(data.error || "Erreur Apps Script.");
@@ -463,11 +477,18 @@
         render();
         setStatus("Données chargées depuis Google Sheets à " + new Date().toLocaleTimeString("fr-FR") + ".");
       } catch (error) {
-        setStatus("Erreur : " + error.message);
+        const msg = error && error.name === "AbortError"
+          ? "Le serveur met trop longtemps à répondre. Vérifie l'URL Web App /exec et le déploiement Apps Script."
+          : error.message;
+        setStatus("Erreur : " + msg);
       }
     }
 
     function normalizeState(data) {
+      if (typeof data === "string") {
+        try { data = JSON.parse(data); } catch { data = {}; }
+      }
+      data = data || {};
       return {
         lobby: { ...state.lobby, ...(data.lobby || {}) },
         settings: { ...state.settings, ...(data.settings || {}) },
