@@ -456,7 +456,7 @@
         const timer = setTimeout(() => controller.abort(), 15000);
         let data;
         try {
-          const url = PUBLIC_API_URL + "?action=get&t=" + Date.now();
+          const url = PUBLIC_API_URL + "?action=getRanking&t=" + Date.now();
           const response = await fetch(url, { signal: controller.signal });
           const text = await response.text();
           try { data = JSON.parse(text); }
